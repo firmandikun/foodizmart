@@ -1,18 +1,20 @@
 import React from "react";
 import "./App.css";
-import { Home } from "./pages/Home";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { DetailProduct } from "./pages/DetailProduct";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "./assets/css/style.css";
+import store from "./app/store";
+import { Provider } from "react-redux";
+import Routers from "./router";
+
+// import useGeoLocation from "../hooks/useGeoLocation";
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/detail" exact component={DetailProduct} />
-        </Switch>
-      </Router>
+      <Provider store={store}>
+        <Routers />
+      </Provider>
     </div>
   );
 }

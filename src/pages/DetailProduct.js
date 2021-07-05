@@ -5,69 +5,88 @@ import { Footer } from "../components/footer";
 import { Header } from "../components/header";
 import { Otherproducts } from "../components/otherproducts";
 import { SimiliarProducts } from "../components/similarProducts";
+import { useParams, withRouter } from "react-router-dom";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
-export const DetailProduct = () => {
+const DetailProduct = (props) => {
+  const { id } = useParams();
+  const [detail, setDetail] = React.useState({});
+  const state = useSelector((state) => state.address);
+
+  console.log(state);
+
+  const authBasic =
+    "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
+
+  React.useEffect(() => {
+    console.log("params : ", props.match.params.id);
+    var bodyFormdata = new FormData();
+    bodyFormdata.append("product_id", id);
+    axios
+      .post(
+        `http://foodiadmin.otiza.com/apiv1/product/product-detail`,
+        bodyFormdata,
+        {
+          headers: {
+            Authorization: authBasic,
+          },
+        }
+      )
+      .then((res) => {
+        if ((res.data.status = "success")) {
+          console.log(res.data);
+          setDetail(res.data.data.product);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
-      <Header />
+      <Header address={state.data.address} />
       <Breadcrumb />
       <div className="container mt-4 ">
         <div className="row">
-          <div className="col-lg-6 p-0">
+          <div className="col-lg-6 col-12 p-0">
             <CardDetail />
           </div>
-          <div className="col-6">
-            <div class="p-4 bg-white rounded shadow-sm">
-              <div class="pt-0">
-                <h2 class="font-weight-bold">Valencia Orange - Imported</h2>
+          <div className="col-lg-6 col-12 ">
+            <div className="p-4 bg-white rounded shadow-sm">
+              <div className="pt-0">
+                <h2 className="font-weight-bold"> {detail.name} </h2>
                 <p
-                  class="
-                    font-weight-light
-                    text-dark
-                    m-0
-                    d-flex
-                    align-items-center
+                  className="font-weight-light text-dark text-left
                   "
+                  style={{ lineHeight: 3 }}
                 >
-                  Harga : <b class="h6 text-dark m-0">30.000</b>
-                  <div className="ml-2">
-                    status : <b class="h6 text-dark m-0">Buka</b>
+                  <div className="m-0">
+                    Harga :<b className="h6 text-dark m-0 "> {detail.price} </b>
                   </div>
-                  <div className="ml-2">
-                    Kota : <b class="h6 text-dark m-0">Yogyakarta</b>
+                  <div className="m-0">
+                    status : <b className="h6 text-dark m-0">Buka</b>
+                  </div>
+                  <div className="m-0">
+                    Kota :
+                    <b className="h6 text-dark m-0"> {detail.delivery_area} </b>
                   </div>
                 </p>
-                <a href="review.html">
-                  <div class="rating-wrap text-left mt-2">
-                    <p class="label-rating text-muted  small">245 Reviews</p>
-                  </div>
-                </a>
               </div>
-              <div class="pt-2">
-                <div class="row d-flex justify-content-between p-1 ">
-                  <div>
-                    <p class="font-weight-bold m-0">status</p>
-                    <p class="text-muted m-0">Buka</p>
-                  </div>
-                </div>
-              </div>
-              <div class="details">
-                <div class="pt-3 bg-white">
-                  <div class="d-flex align-items-center">
+              <div className="details">
+                <div className="pt-3 bg-white">
+                  <div className="d-flex align-items-center">
                     <div
-                      class="btn-group osahan-radio btn-group-toggle"
+                      className="btn-group osahan-radio btn-group-toggle"
                       data-toggle="buttons"
                     ></div>
                   </div>
                 </div>
-                <div class="pt-3">
-                  <p class="font-weight-bold mb-2">Product Details</p>
-                  <p class="text-muted small text-justify mb-0">
-                    High quality Fresh Orange fruit exporters from South Korea
-                    for sale. All citrus trees belong to the single genus Citrus
-                    and remain almost entirely interfertile. for sale. All
-                    citrus trees belong to the single genus Citrus and remain
-                    almost entirely interfertile.
+                <div className="pt-3">
+                  <p className="font-weight-bold mb-2">Product Details</p>
+                  <p className="text-muted small text-justify mb-0">
+                    {detail.description}
                   </p>
                 </div>
               </div>
@@ -81,3 +100,5 @@ export const DetailProduct = () => {
     </>
   );
 };
+
+export default withRouter(DetailProduct);
