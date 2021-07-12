@@ -10,6 +10,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import icontCenteng from "../../src/assets/centang.svg";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { LoadingComponent } from "../atom/loading";
 
 const useStyles = makeStyles({
   list: {
@@ -35,11 +37,17 @@ export const ListProducts = (props) => {
     JSON.parse(localStorage.getItem("dasboard")).category
   );
   const [imageProduct] = React.useState(
-    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product.small
+    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product.medium
   );
   const [page, setPage] = React.useState(8);
   const [drawel, setDrawel] = React.useState(false);
   const classes = useStyles();
+  const [keywordSearch] = React.useState(
+    props.location.state !== undefined
+      ? props.location.state.cari
+      : "search prodcuts..."
+  );
+  const [isloading, setLoading] = React.useState(false);
 
   const toggleDrawer = (open) => (event) => {
     setDrawel(open);
@@ -53,9 +61,10 @@ export const ListProducts = (props) => {
     bodyFormdata.append("search_type", "product");
     bodyFormdata.append("search_key", params.cari);
     bodyFormdata.append("filter[product_categor_id]", params.categoryId);
+    setLoading(true);
     axios
       .post(
-        "http://foodiadmin.otiza.com/apiv1/product/search-product",
+        "https://foodi.otiza.com/apiv1/product/search-product",
         bodyFormdata,
         {
           headers: {
@@ -66,7 +75,7 @@ export const ListProducts = (props) => {
       .then((res) => {
         if (res.data.status === "success") {
           setFillterProducts(res.data.data.product_result);
-          console.log(res.data);
+          setLoading(false);
         }
       })
       .catch((err) => {
@@ -75,14 +84,16 @@ export const ListProducts = (props) => {
   };
 
   React.useEffect(() => {
-    console.log(category);
-
     fecthData({
       cari: seacrh,
       categoryId: categoryId,
     });
   }, []);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // getProducts();
+  };
   return (
     <div>
       <Header
@@ -94,6 +105,8 @@ export const ListProducts = (props) => {
           })
         }
         address={state.data.address}
+        handleSubmit={handleSubmit}
+        search={keywordSearch}
       />
       <Breadcrumb />
       <div className="container p-0 list-product">
@@ -179,15 +192,14 @@ export const ListProducts = (props) => {
               activeClassName="active"
               onClick={() => {
                 let data = [...fillterProducts];
-                data.reverse((a) => {
-                  return a.price;
+                data.sort((a, b) => {
+                  return b.price - a.price;
                 });
                 setFillterProducts(data);
                 setDrawel(false);
               }}
             >
-              <p className="mt-2">Termahal</p>
-              <img src={icontCenteng} alt="" className="mt-2" width={20} />
+              Termahal
             </button>
             <button
               type="button"
@@ -195,26 +207,35 @@ export const ListProducts = (props) => {
               activeClassName="active"
               onClick={() => {
                 let data = [...fillterProducts];
-                data.reverse((a) => {
-                  return a.rating_star;
+                data.sort((a, b) => {
+                  return b.rating_star - a.rating_star;
                 });
                 setFillterProducts(data);
                 setDrawel(false);
               }}
             >
-              <p className="mt-2">Ratting</p>
-              <img src={icontCenteng} alt="" className="mt-2" width={20} />
+              Ratting
+            </button>
+            <button
+              type="button"
+              className="list-group-item list-group-item-action d-flex justify-content-between "
+              activeClassName="active"
+              onClick={() => {
+                let data = [...fillterProducts];
+                data.sort((a, b) => {
+                  return b.qty_order - a.qty_order;
+                });
+                setFillterProducts(data);
+                setDrawel(false);
+              }}
+            >
+              Order Terbanyak
             </button>
           </div>
         </Drawer>
-        <InfiniteScroll
-          dataLength={fillterProducts.length}
-          next={() => setPage(page + 4)}
-          hasMore={true}
-          style={{ display: "flex", flexWrap: "wrap" }}
-          loader={<h4>Loading...</h4>}
-        >
-          {fillterProducts.slice(0, page).map((product, index) => {
+
+        <div className="row">
+          {fillterProducts.map((product, index) => {
             return (
               <Products
                 image={`${imageProduct}${product.photo}`}
@@ -225,10 +246,12 @@ export const ListProducts = (props) => {
                 price={product.price}
                 key={index}
                 _id={product.id}
+                qty={product.qty_order}
+                ratting={product.rating_star}
               />
             );
           })}
-        </InfiniteScroll>
+        </div>
       </div>
       <Footer />
     </div>

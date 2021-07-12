@@ -8,6 +8,9 @@ import image4 from "../../assets/img/listing/v8.jpg";
 import { Link } from "react-router-dom";
 
 export const SimiliarProducts = ({ title }) => {
+
+  
+  
   return (
     <div>
       <div className="container list-product">
@@ -21,7 +24,9 @@ export const SimiliarProducts = ({ title }) => {
           </a>
         </div>
         <div className="row">
-          <Products image={image1} />
+          
+
+          <Products   image={image1} />
           <Products image={image2} />
           <Products image={image3} />
           <Products image={image4} />

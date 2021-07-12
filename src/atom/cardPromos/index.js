@@ -2,12 +2,13 @@ import React from "react";
 
 export const CardPromos = ({ image }) => {
   return (
-    <div className="osahan-slider-item mx-2">
-      <a href="promo_details.html">
+    <div className="osahan-slider-item mx-2"  >
+      <a href="" >
         <img
           src={image}
-          className="img-fluid mx-auto rounded"
+          className="img-fluid osahan-slider-item mx-auto rounded"
           alt="Responsive image"
+       
         />
       </a>
     </div>

@@ -13,10 +13,19 @@ import {
   NavLink,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { useHistory, withRouter } from "react-router";
 
-export const Header = ({ onChange, onPress, address }) => {
+export const Header = ({
+  onChange,
+  onPress,
+  address,
+  category,
+  handleSubmit,
+  search,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const history = useHistory();
 
   return (
     <div>
@@ -47,7 +56,7 @@ export const Header = ({ onChange, onPress, address }) => {
             />
           </Link>
         </div>
-        <a href="" className="text-decoration-none">
+        <a className="text-decoration-none">
           <div className="input-group mt-3 rounded shadow-sm overflow-hidden bg-white">
             <div className="input-group-prepend">
               <button className="border-0 btn  text-danger font-weight-bold bg-white  ">
@@ -171,21 +180,28 @@ export const Header = ({ onChange, onPress, address }) => {
             </div>
 
             <div className="input-group mr-sm-2 col-lg-12">
-              <input
-                type="text"
-                className="form-control"
-                id="inlineFormInputGroupUsername2"
-                placeholder="Plilih Product.."
-                onChange={onChange}
-              />
-              <div className="input-group-prepend">
-                <button
-                  onClick={onPress}
-                  className="btn btn-danger rounded-right font-weight-bold "
-                >
-                  cari
-                </button>
-              </div>
+              <form
+                onSubmit={handleSubmit}
+                className="d-flex"
+                style={{ width: 380 }}
+              >
+                <input
+                  type="text"
+                  className="form-control"
+                  id="inlineFormInputGroupUsername2"
+                  placeholder={search}
+                  onChange={onChange}
+                />
+                <div className="input-group-prepend">
+                  <button
+                    type="submit"
+                    onClick={onPress}
+                    className="btn btn-danger rounded-right font-weight-bold ml-1 "
+                  >
+                    cari
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
           <a className="btn btn-danger ml-auto font-weight-bold ">
@@ -193,6 +209,7 @@ export const Header = ({ onChange, onPress, address }) => {
           </a>
         </nav>
       </div>
+
       <Navbar
         color="light"
         light
@@ -210,22 +227,16 @@ export const Header = ({ onChange, onPress, address }) => {
               </NavItem>
               <NavItem>
                 <NavLink className="text-white" href="/products">
-                  Product
+                  Produk
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink
-                  className="text-white"
-                  href="https://github.com/reactstrap/reactstrap"
-                >
+                <NavLink className="text-white" href="">
                   F.A.Q.
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink
-                  className="text-white"
-                  href="https://github.com/reactstrap/reactstrap"
-                >
+                <NavLink className="text-white" href="/">
                   Tentang Kami
                 </NavLink>
               </NavItem>

@@ -111,7 +111,16 @@ body {
   background-color: #f52d56;
 }
 
+.card-store {
+  width: 300px;
+  height: 250px;
+}
 
+.img-card-products {
+  object-fit: cover;
+  width: 250px;
+  height: 200px;
+}
 
 .osahan-header .dropdown-menu {
   min-width: 260px;
@@ -132,6 +141,7 @@ body {
 
 .p-4.profile.text-center.border-bottom img {
   height: 80px;
+  object-fit: cover;
 }
 
 /* Extra */
@@ -369,6 +379,10 @@ a:hover {
   border-radius: 5px;
   background: #fff;
   margin-bottom: 15px;
+  object-fit: cover;
+}
+img {
+  object-fit: cover;
 }
 
 .pd-f a {
@@ -629,7 +643,8 @@ span.c-number {
 }
 
 .list-card-image .price {
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .list-card-image a.btn {
@@ -764,8 +779,9 @@ label {
 }
 
 .badge-danger {
-  color: #ff6000;
-  background-color: rgb(255 96 0 / 15%);
+  color: white;
+  background-color: rgb(245, 45, 86);
+  /* border-radius: 0; */
 }
 
 .badge-info {

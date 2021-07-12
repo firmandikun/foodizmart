@@ -16,7 +16,6 @@ const Routers = () => {
   React.useEffect(() => {
     // console.log(state);
     if (location.loaded) {
-      
       dispatch(fecthDataAddress(location));
     }
   }, [location, dispatch]);

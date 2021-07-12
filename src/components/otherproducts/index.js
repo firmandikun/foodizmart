@@ -7,7 +7,10 @@ import image4 from "../../assets/img/listing/v4.jpg";
 
 import { Link } from "react-router-dom";
 
-export const Otherproducts = ({ title }) => {
+export const Otherproducts = ({ title, product }) => {
+   const [imageProduct] = React.useState(
+    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product.medium
+  );
   return (
     <div>
       <div className="container list-product">
@@ -15,16 +18,18 @@ export const Otherproducts = ({ title }) => {
           <h5 class="m-0">{title} </h5>
           <a
             class="ml-auto btn btn-outline-success btn-sm"
-            href="picks_today.html"
+            href=""
           >
             See more
           </a>
         </div>
         <div className="row">
-          <Products image={image1} />
-          <Products image={image2} />
-          <Products image={image3} />
-          <Products image={image4} />
+          {
+            product.slice(0,8).map((item, index) => {
+              return <Products nameProduct={item.name} nameStore={item.shop_name} price={item.price}   image={`${imageProduct}${item.photo}`} />
+            })
+          }
+        
         </div>
       </div>
     </div>

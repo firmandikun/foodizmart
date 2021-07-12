@@ -8,6 +8,7 @@ import { Footer } from "../components/footer";
 import axios from "axios";
 import { withRouter } from "react-router";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 
 const DetailStore = (props) => {
   const [detailStore, setDetailStore] = React.useState({});
@@ -18,11 +19,12 @@ const DetailStore = (props) => {
   );
   const [page, setPage] = React.useState(8);
   const state = useSelector((state) => state.address);
+  const [seacrh, setSeacrh] = React.useState();
+  const [keywordSearch] = React.useState("search product...");
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
-
+  const history = useHistory();
   const getDetailStore = async () => {
-    console.log("params : ", props.match.params.shop_id);
     var bodyFormdata = new FormData();
     bodyFormdata.append("shop_id", props.match.params.shop_id);
     axios
@@ -38,7 +40,7 @@ const DetailStore = (props) => {
       .then((res) => {
         if ((res.data.status = "success")) {
           console.log("api detai store :", res.data.data.shop);
-          setDetailStore(res.data.data.shop);
+          
         }
       })
       .catch((err) => {
@@ -52,7 +54,7 @@ const DetailStore = (props) => {
     bodyFormdata.append("product_id", props.match.params.shop_id);
     axios
       .post(
-        "http://foodiadmin.otiza.com/apiv1/product/product-detail-for-transaction",
+        "http://foodi.otiza.com/apiv1/product/product-detail-for-transaction",
         bodyFormdata,
         {
           headers: {
@@ -63,6 +65,7 @@ const DetailStore = (props) => {
       .then((res) => {
         if ((res.data.status = "success")) {
           setOtherProducts(res.data.data.other_product);
+          setDetailStore(res.data.data.shop);
         }
       })
       .catch((err) => {
@@ -75,7 +78,7 @@ const DetailStore = (props) => {
     bodyFormdata.append("shop_id", props.match.params.shop_id);
     axios
       .post(
-        "http://foodiadmin.otiza.com/apiv1/product/get-all-product-by-shop",
+        "https://foodi.otiza.com/apiv1/product/get-all-product-by-shop",
         bodyFormdata,
         {
           headers: {
@@ -93,19 +96,38 @@ const DetailStore = (props) => {
       });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   React.useEffect(() => {
     getOtherProducts();
     getDetailStore();
-    getProductStore()
+    getProductStore();
   }, []);
 
   return (
     <>
-      <Header address={state.data.address} />
+      <Header
+        address={state.data.address}
+        onChange={(e) => setSeacrh(e.target.value)}
+        onPress={() =>
+          history.push({
+            pathname: "/products",
+            state: { cari: seacrh, categoryId: "" },
+          })
+        }
+        search={keywordSearch}
+        handleSubmit={handleSubmit}
+      />
       <div className="container mt-5 ">
-        <div className="row bg-white rounded shadow-sm d-flex align-items-center justify-content-around px-4 ">
+        <div className="row bg-white rounded shadow-sm d-flex align-items-center justify-content-around px-4 py-5 ">
           <div className="col-lg-4 col-12 ">
-            <img src={logoStore} alt="" className="img-fluid" />
+            <img
+              src={`http://foodiadmin.otiza.com/asset/image/shop/small/${detailStore.logo}`}
+              alt=""
+              className="img-fluid"
+            />
             <p className="h6">Indonesia, Yogyakarta, condongcatur </p>
             <div class="text-left" style={{ marginLeft: 30 }}>
               <img src={iconeR} alt="" style={{ width: 20, padding: 2 }} />
@@ -168,20 +190,19 @@ const DetailStore = (props) => {
               />
             );
           })}
-         </div>  
-          <div className="row ml-auto pr-3">
-            <button
-              className="btn btn-outline-danger ml-auto"
-              onClick={() =>
-                page === productStore.length
-                  ? setPage(8)
-                  : setPage(productStore.length)
-              }
-            >
-              {page === productStore.length ? "less more" : "see more"}
-            </button>
-          </div>
-       
+        </div>
+        <div className="row ml-auto pr-3">
+          <button
+            className="btn btn-outline-danger ml-auto"
+            onClick={() =>
+              page === productStore.length
+                ? setPage(8)
+                : setPage(productStore.length)
+            }
+          >
+            {page === productStore.length ? "less more" : "see more"}
+          </button>
+        </div>
       </div>
 
       <div className="container mt-4">
@@ -190,7 +211,7 @@ const DetailStore = (props) => {
             <h5 class="m-1">Produk Lainya </h5>
           </div>
         </div>
-        
+
         <div className="row">
           {otherProduct.slice(0, page).map((product, index) => {
             return (
@@ -204,20 +225,19 @@ const DetailStore = (props) => {
               />
             );
           })}
-          </div>
-          <div className="row ml-auto pr-3">
-            <button
-              className="btn btn-outline-danger ml-auto"
-              onClick={() =>
-                page === otherProduct.length
-                  ? setPage(8)
-                  : setPage(otherProduct.length)
-              }
-            >
-              {page === otherProduct.length ? "less more" : "see more"}
-            </button>
-          </div>
-        
+        </div>
+        <div className="row ml-auto pr-3">
+          <button
+            className="btn btn-outline-danger ml-auto"
+            onClick={() =>
+              page === otherProduct.length
+                ? setPage(8)
+                : setPage(otherProduct.length)
+            }
+          >
+            {page === otherProduct.length ? "less more" : "see more"}
+          </button>
+        </div>
       </div>
       <Footer />
     </>

@@ -8,9 +8,10 @@ import { Footer } from "../components/footer";
 import { Header } from "../components/header";
 import { Promos } from "../components/promos";
 import { CardStore } from "../atom/cardStore";
+import { LoadingComponent } from "../atom/loading";
 import { useHistory, withRouter } from "react-router";
 import { useSelector } from "react-redux";
-import { START_FETCHING_ADRESS } from "../features/locations/constants";
+import { START_FETCHING_ADRESS  } from "../features/locations/constants";
 import axios from "axios";
 
 const Home = () => {
@@ -24,6 +25,8 @@ const Home = () => {
   const [seeAllProduct, setSeeAllProducts] = React.useState(8);
   const [seacrh, setSeacrh] = React.useState();
   const [imageSlider, setImageSleder] = React.useState(null);
+  const [keywordSearch] = React.useState("search product...");
+  const [isLoading, setLoading] = React.useState(true);
 
   const history = useHistory();
   const authBasic =
@@ -31,9 +34,10 @@ const Home = () => {
   const state = useSelector((state) => state.address);
 
   const getSlider = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
-        "http://foodiadmin.otiza.com/apiv1/slider/lists",
+        "https://foodi.otiza.com/apiv1/slider/lists",
         {
           headers: {
             Authorization: authBasic,
@@ -41,13 +45,14 @@ const Home = () => {
         }
       );
       setImageSleder(response.data);
-      console.log("dasboard skider :", response.data);
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
   };
 
   const getProducts = async (state) => {
+    setLoading(true);
     var bodyFormdata = new FormData();
     bodyFormdata.append("google[kelurahan][name]", state.data.kelurahan);
     bodyFormdata.append("google[kecamatan][name]", state.data.kecamatan);
@@ -55,7 +60,7 @@ const Home = () => {
     bodyFormdata.append("google[provinsi][name]", state.data.provinsi);
     try {
       const response = await axios.post(
-        "http://foodiadmin.otiza.com/apiv1/home/dashboard",
+        "https://foodi.otiza.com/apiv1/home/dashboard",
         bodyFormdata,
         {
           headers: {
@@ -63,6 +68,7 @@ const Home = () => {
           },
         }
       );
+
       if (response.data.status === "success") {
         setProduct(response.data.data.product_by_arround_you);
         setStore(response.data.data.shop_by_arround_you);
@@ -70,9 +76,8 @@ const Home = () => {
         setImageCategory(
           response.data.data.support.base_url["product-category"].original
         );
-        setImageProducts(response.data.data.support.base_url.product.original);
-        setImageStore(response.data.data.support.base_url.shop.original)
-
+        setImageProducts(response.data.data.support.base_url.product.medium);
+        setImageStore(response.data.data.support.base_url.shop.medium);
         localStorage.setItem(
           "dasboard",
           JSON.stringify({
@@ -80,6 +85,7 @@ const Home = () => {
             support: response.data.data.support,
           })
         );
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
@@ -95,6 +101,10 @@ const Home = () => {
       getProducts(state);
     }
   }, [state]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
 
   const settings = {
     className: "center",
@@ -180,16 +190,20 @@ const Home = () => {
             state: { cari: seacrh, categoryId: "" },
           })
         }
+
         address={state.data.address}
+        value={seacrh}
+        handleSubmit={handleSubmit}
+        search={keywordSearch}
       />
       <div className="container p-0">
         <div className="text-left  py-3">
-          <h5 className="m-0">Category</h5>
+          <h5 className="m-0">Kategori</h5>
         </div>
         <Slider {...settings}>
           {category.map((categ, index) => {
             return (
-              <div key={index}>
+              isLoading ? <LoadingComponent/>  : <div key={index}>
                 <Card
                   image={`${imageCategory}${categ.logo}`}
                   name={categ.name}
@@ -205,14 +219,18 @@ const Home = () => {
           })}
         </Slider>
       </div>
-      <Promos image={imageSlider} />
+      <div>
+       <Promos image={imageSlider} />
+       </div>
       <div className="container p-0 list-product">
         <div className="title d-flex align-items-center py-3">
-          <h5 className="m-0">Products</h5>
+          <h5 className="m-0">Produk</h5>
         </div>
         <div className="row">
           {product.slice(0, seeAllProduct).map((product, index) => {
-            return (
+            return isLoading ? (
+              <LoadingComponent />
+            ) : (
               <Products
                 image={`${imageProducts}${product.photo}`}
                 nameProduct={product.name}
@@ -222,6 +240,8 @@ const Home = () => {
                 price={product.price}
                 key={index}
                 _id={product.id}
+                qty={product.qty_order}
+               ratting={product.rating_star}
               />
             );
           })}
@@ -251,10 +271,10 @@ const Home = () => {
         <div className="row">
           {store.slice(0, seeAllStore).map((store, index) => {
             return (
-              <CardStore
-                name={store.shop_name}
+            isLoading ? ( <LoadingComponent /> ) : <CardStore
+                name={store.name}
                 address={store.address}
-                id={store.shop_id}
+                id={store.id}
                 key={index}
                 image={`${imageStore}${store.logo}`}
               />

@@ -6,7 +6,7 @@ import { CardPromos } from "../../atom/cardPromos";
 
 export const Promos = ({ image }) => {
   const [imageSlider] = React.useState(
-    JSON.parse(localStorage.getItem("dasboard")).support.base_url.slider
+    JSON.parse(localStorage.getItem("dasboard"))?.support.base_url.slider
       .original
   );
   const settings = {
@@ -60,18 +60,18 @@ export const Promos = ({ image }) => {
     <div className="container p-0 ">
       <div className="py-3 osahan-promos">
         <div className="text-left mb-3">
-          <h5 className="m-0">Information</h5>
+          <h5 className="m-0">Informasi</h5>
         </div>
         <Slider {...settings}>
-          {
-          image ? image.data.lists.map((img, index) => {
-            return (
-              <div>
-                <CardPromos image={`${imageSlider}${img.path}`} />
-              </div>
-            );
-          }) : null   
-          }
+          {image
+            ? image.data.lists.map((img, index) => {
+                return (
+                  <div>
+                    <CardPromos image={`${imageSlider}${img.path}`} />
+                  </div>
+                );
+              })
+            : null}
         </Slider>
       </div>
     </div>

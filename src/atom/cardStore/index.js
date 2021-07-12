@@ -6,8 +6,7 @@ import image1 from "../../assets/img/recommend/r1.jpg";
 import image2 from "../../assets/img/recommend/r2.jpg";
 import image3 from "../../assets/img/recommend/r3.jpg";
 import iconeR from "../../assets/rating.png";
-export const CardStore = ({ name, id , image, address}) => {
-
+export const CardStore = ({ name, id, image, address }) => {
   const history = useHistory();
 
   return (
@@ -18,10 +17,10 @@ export const CardStore = ({ name, id , image, address}) => {
       >
         <div className=" list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm ">
           <div className="recommend-slider2 rounded mb-0">
-            <div className="osahan-slider-item p-2 rounded">
+            <div className="osahan-slider-item mx-auto my-2 p-2 card-store rounded">
               <img
                 src={image}
-                className="img-fluid mx-auto rounded shadow-sm"
+                className="img-fluid img-card-products mx-auto rounded shadow-sm"
                 alt="Responsive image"
               />
             </div>
