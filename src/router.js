@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ListProducts } from "./pages/ListProducts";
 import DetailStore from "./pages/DetailStore";
 import DetailProduct from "./pages/DetailProduct";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import useGeoLocation from "./components/hooks/useGeoLocation";
 import { fecthDataAddress } from "./features/locations/action";
@@ -14,7 +14,6 @@ const Routers = () => {
   const location = useGeoLocation();
 
   React.useEffect(() => {
-    // console.log(state);
     if (location.loaded) {
       dispatch(fecthDataAddress(location));
     }

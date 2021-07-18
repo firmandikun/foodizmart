@@ -7,10 +7,7 @@ import icontFillter from "../../src/assets/fillter.png";
 import axios from "axios";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
-import icontCenteng from "../../src/assets/centang.svg";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { LoadingComponent } from "../atom/loading";
 
 const useStyles = makeStyles({
@@ -39,7 +36,6 @@ export const ListProducts = (props) => {
   const [imageProduct] = React.useState(
     JSON.parse(localStorage.getItem("dasboard")).support.base_url.product.medium
   );
-  const [page, setPage] = React.useState(8);
   const [drawel, setDrawel] = React.useState(false);
   const classes = useStyles();
   const [keywordSearch] = React.useState(
@@ -92,7 +88,6 @@ export const ListProducts = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // getProducts();
   };
   return (
     <div>
@@ -199,7 +194,7 @@ export const ListProducts = (props) => {
                 setDrawel(false);
               }}
             >
-              Termahal
+              Harga Termahal
             </button>
             <button
               type="button"
@@ -236,7 +231,9 @@ export const ListProducts = (props) => {
 
         <div className="row">
           {fillterProducts.map((product, index) => {
-            return (
+            return isloading === true ? (
+              LoadingComponent
+            ) : (
               <Products
                 image={`${imageProduct}${product.photo}`}
                 nameProduct={product.name}

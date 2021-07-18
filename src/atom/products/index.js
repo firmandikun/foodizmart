@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import CurrencyFormat from "react-currency-format";
+import { convertToIdr } from "../../assets/js/convert (1)";
 
 export const Products = ({
   image,
@@ -21,7 +21,7 @@ export const Products = ({
           <div className="list-card-image">
             <div className="text-dark">
               <div className="d-flex justify-content-between">
-                <span className="badge mx-3 mt-3 badge-danger">{status}</span>
+                <span className="badge status mx-3 mt-3 ">{status}</span>
                 <span className="badge mt-3 mr-3 badge-success">
                   {ratting > 0 ? ratting : ""}
                 </span>
@@ -43,18 +43,12 @@ export const Products = ({
                 <p className="text-muted mt-0"> {location} </p>
                 <div className="d-flex align-items-center">
                   <h6 className="price m-0 text-success">
-                    <CurrencyFormat
-                      value={price}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      prefix={"Rp"}
-                    />
+                    {convertToIdr(price, "Rp")}
                   </h6>
                   <span className="ml-auto"> {nameProduct} </span>
                 </div>
                 <div className="d-flex align-items-center">
                   <span className="mt-1">
-                    {" "}
                     {qty >= 0 ? "Produk Terjual : " + qty : ""}{" "}
                   </span>
                 </div>

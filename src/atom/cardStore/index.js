@@ -1,14 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router";
-import Slider from "react-slick";
-
-import image1 from "../../assets/img/recommend/r1.jpg";
-import image2 from "../../assets/img/recommend/r2.jpg";
-import image3 from "../../assets/img/recommend/r3.jpg";
-import iconeR from "../../assets/rating.png";
 export const CardStore = ({ name, id, image, address }) => {
   const history = useHistory();
-
   return (
     <div className="col-12 col-md-4 mb-3">
       <a
@@ -28,13 +21,6 @@ export const CardStore = ({ name, id, image, address }) => {
           <div className="p-3 position-relative">
             <h6 className="mb-1 font-weight-bold text-success">{name}</h6>
             <p className="text-muted">{address} </p>
-            <div className="text-right ">
-              <img src={iconeR} alt="" style={{ width: 20, padding: 2 }} />
-              <img src={iconeR} alt="" style={{ width: 20, padding: 2 }} />
-              <img src={iconeR} alt="" style={{ width: 20, padding: 2 }} />
-              <img src={iconeR} alt="" style={{ width: 20, padding: 2 }} />
-              <img src={iconeR} alt="" style={{ width: 20, padding: 2 }} />
-            </div>
           </div>
         </div>
       </a>

@@ -1,9 +1,7 @@
 import React from "react";
 import { Header } from "../components/header";
-import logoStore from "../../src/assets/logo.png";
 import { Products } from "../atom/products";
 import icontShare from "../assets/share.png";
-import iconeR from "../assets/rating.png";
 import { Footer } from "../components/footer";
 import axios from "axios";
 import { withRouter } from "react-router";
@@ -24,30 +22,7 @@ const DetailStore = (props) => {
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
   const history = useHistory();
-  const getDetailStore = async () => {
-    var bodyFormdata = new FormData();
-    bodyFormdata.append("shop_id", props.match.params.shop_id);
-    axios
-      .post(
-        "http://foodiadmin.otiza.com/apiv1/product/shop-detail",
-        bodyFormdata,
-        {
-          headers: {
-            Authorization: authBasic,
-          },
-        }
-      )
-      .then((res) => {
-        if ((res.data.status = "success")) {
-          console.log("api detai store :", res.data.data.shop);
-          
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
+  
   const getOtherProducts = () => {
     console.log("params : ", props.match.params.shop_id);
     var bodyFormdata = new FormData();
@@ -102,7 +77,8 @@ const DetailStore = (props) => {
 
   React.useEffect(() => {
     getOtherProducts();
-    getDetailStore();
+  }, []);
+  React.useEffect(() => {
     getProductStore();
   }, []);
 
@@ -129,10 +105,6 @@ const DetailStore = (props) => {
               className="img-fluid"
             />
             <p className="h6">Indonesia, Yogyakarta, condongcatur </p>
-            <div class="text-left" style={{ marginLeft: 30 }}>
-              <img src={iconeR} alt="" style={{ width: 20, padding: 2 }} />
-              <img src={iconeR} alt="" style={{ width: 20, padding: 2 }} />
-            </div>
           </div>
           <div className="col-lg-4 col-md-12 col-sm-12">
             <p className="h5 font-weight-light" style={{ fontSize: 15 }}>
@@ -185,8 +157,9 @@ const DetailStore = (props) => {
                 nameProduct={product.name}
                 location="yogyakarta, condong catur"
                 nameStore={product.shop_name}
-                price="20000"
+                price={product.price}
                 key={index}
+                _id={product.id}
               />
             );
           })}
@@ -208,24 +181,10 @@ const DetailStore = (props) => {
       <div className="container mt-4">
         <div className="row">
           <div class="title d-flex align-items-center py-4">
-            <h5 class="m-1">Produk Lainya </h5>
+            <h5 class="m-1">List Riview</h5>
           </div>
         </div>
 
-        <div className="row">
-          {otherProduct.slice(0, page).map((product, index) => {
-            return (
-              <Products
-                image={`${imageProduct}${product.photo}`}
-                nameProduct={product.name}
-                location="yogyakarta, condong catur"
-                nameStore={product.shop_name}
-                price="20000"
-                key={index}
-              />
-            );
-          })}
-        </div>
         <div className="row ml-auto pr-3">
           <button
             className="btn btn-outline-danger ml-auto"

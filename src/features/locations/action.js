@@ -29,7 +29,6 @@ export const fecthDataAddress = (location) => {
           var kelurahan = res.data.results[0].address_components.filter((o) =>
             o.types.includes("administrative_area_level_4")
           )[0].long_name;
-
           var params = {
             address,
             provinsi,

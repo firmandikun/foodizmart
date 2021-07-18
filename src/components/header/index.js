@@ -4,28 +4,38 @@ import Logo from "../../assets/logo.png";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
 import { FaSistrix } from "react-icons/fa";
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  Nav,
-  NavItem,
-  NavLink,
-} from "reactstrap";
+import { Collapse, Navbar, Nav, NavItem, NavLink } from "reactstrap";
 import { Link } from "react-router-dom";
-import { useHistory, withRouter } from "react-router";
+import Drawer from "@material-ui/core/Drawer";
+import { makeStyles } from "@material-ui/core/styles";
+import axios from "axios";
+
+const useStyles = makeStyles({
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
+  },
+  paper: {
+    background: "white",
+  },
+});
 
 export const Header = ({
   onChange,
   onPress,
   address,
-  category,
   handleSubmit,
   search,
+  handleLocations,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-  const history = useHistory();
+  const [drawel, setDrawel] = React.useState(false);
+  const classes = useStyles();
+  const toggleDrawer = (open) => (event) => {
+    setDrawel(open);
+  };
+  
 
   return (
     <div>
@@ -43,7 +53,7 @@ export const Header = ({
             </div>
           </Link>
           <p className="ml-auto "></p>
-          <Link className="toggle  ml-auto" to="">
+          <a className="toggle  ml-auto" onClick={toggleDrawer(true)}>
             <FaBars
               style={{
                 color: "black",
@@ -54,21 +64,28 @@ export const Header = ({
                 width: 80,
               }}
             />
-          </Link>
+          </a>
         </div>
         <a className="text-decoration-none">
           <div className="input-group mt-3 rounded shadow-sm overflow-hidden bg-white">
-            <div className="input-group-prepend">
-              <button className="border-0 btn  text-danger font-weight-bold bg-white  ">
-                <FaSistrix />
-              </button>
-            </div>
-            <input
-              type="text"
-              className="shadow-none border-0 form-control pl-0"
-              placeholder="Search for Products.."
-              aria-describedby="basic-addon1"
-            />
+            <form className="input-group-prepend" onSubmit={handleSubmit}>
+              <div>
+                <button
+                  onClick={onPress}
+                  className="border-0 btn  text-danger font-weight-bold bg-white  "
+                >
+                  <FaSistrix />
+                </button>
+              </div>
+              <input
+                type="text"
+                className="shadow-none border-0 form-control pl-0"
+                placeholder="Search for Products.."
+                aria-describedby="basic-addon1"
+                placeholder={search}
+                onChange={onChange}
+              />
+            </form>
           </div>
         </a>
       </div>
@@ -137,45 +154,19 @@ export const Header = ({
                 className="dropdown-menu osahan-select-loaction p-3"
                 aria-labelledby="navbarDropdown"
               >
-                <span>Pilih kota Anda untuk mulai belanja</span>
-                <form className="form-inline my-2">
-                  <div className="input-group p-0 col-lg-12">
-                    <input
-                      type="text"
-                      className="form-control form-control-sm"
-                      id="inlineFormInputGroupUsername2"
-                      placeholder="Plih  Lokasi"
-                    />
-                    <div className="input-group-prepend">
-                      <div className="btn btn-danger rounded-right btn-sm">
-                        <i className="icofont-location-arrow"></i> Pilih
-                      </div>
-                    </div>
-                  </div>
-                </form>
-                <div className="city pt-2">
-                  <h6>Top Kota</h6>
-                  <p className="border-bottom m-0 py-1">
-                    <a href="#" className="text-dark">
-                      Yogyakarta
-                    </a>
-                  </p>
-                  <p className="border-bottom m-0 py-1">
-                    <a href="#" className="text-dark">
-                      Jakarta
-                    </a>
-                  </p>
-                  <p className="border-bottom m-0 py-1">
-                    <a href="#" className="text-dark">
-                      Kebumen
-                    </a>
-                  </p>
-                  <p className="m-0 py-1">
-                    <a href="#" className="text-dark">
-                      kelaten
-                    </a>
-                  </p>
-                </div>
+                <span className="text-center mb-3">Pilih Lokasi </span>
+
+                <ul
+                  class="list-group list-group-flush"
+                  style={{ cursor: "pointer" }}
+                >
+                  <li class="list-group-item" onClick={handleLocations}>
+                    Yogyakarta
+                  </li>
+                  <li class="list-group-item">Jakarta</li>
+                  <li class="list-group-item">Jawa Tengah</li>
+                  <li class="list-group-item">Jawa Barat</li>
+                </ul>
               </div>
             </div>
 
@@ -191,6 +182,11 @@ export const Header = ({
                   id="inlineFormInputGroupUsername2"
                   placeholder={search}
                   onChange={onChange}
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
                 />
                 <div className="input-group-prepend">
                   <button
@@ -210,6 +206,49 @@ export const Header = ({
         </nav>
       </div>
 
+      <Drawer
+        open={drawel}
+        anchor={"left"}
+        onClose={toggleDrawer(false)}
+        classes={{ paper: classes.paper }}
+      >
+        <div className="list-group" style={{ width: 240 }}>
+          <button
+            type="button"
+            className="list-group-item list-group-item-action status "
+            aria-current="true"
+          >
+            Foodismart
+          </button>
+          <Link
+            type="button"
+            className="list-group-item list-group-item-action"
+            to="/"
+          >
+            Home
+          </Link>
+          <Link
+            type="button"
+            className="list-group-item list-group-item-action"
+            to="/products"
+          >
+            Produk
+          </Link>
+          <button
+            type="button"
+            className="list-group-item list-group-item-action"
+          >
+            F.A.Q.
+          </button>
+          <button
+            type="button"
+            className="list-group-item list-group-item-action"
+            disabled
+          >
+            Tentang Kami
+          </button>
+        </div>
+      </Drawer>
       <Navbar
         color="light"
         light
@@ -217,8 +256,7 @@ export const Header = ({
         className="bg-color-head headerNav"
       >
         <div className="container pl-1 ">
-          <NavbarToggler onClick={toggle} />
-          <Collapse isOpen={isOpen} navbar>
+          <Collapse navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
                 <NavLink href="/" className=" text-white pl-0">
@@ -231,7 +269,7 @@ export const Header = ({
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className="text-white" href="">
+                <NavLink className="text-white" href="/">
                   F.A.Q.
                 </NavLink>
               </NavItem>

@@ -84,6 +84,25 @@ body {
   margin: 0px;
 }
 
+/* detail product */
+
+.nameDetailProduct {
+  font-weight: 900;
+  line-height: 1.5rem;
+  font-size: 2rem;
+  word-wrap: break-word;
+}
+
+.text-product {
+  font-size: 16px !important;
+}
+
+p.deskProduk {
+  color: #f8caca;
+  text-transform: capitalize;
+  font-size: 16px;
+}
+
 .schedule .nav-link.active:after,
 .schedule .nav-link:focus:after,
 .schedule .nav-link:hover:after {
@@ -108,12 +127,17 @@ body {
 }
 
 .btn-search {
-  background-color: #f52d56;
+  background-color: rgb(245, 45, 86) !important;
 }
 
 .card-store {
   width: 300px;
   height: 250px;
+}
+
+.status {
+  background-color: rgb(245, 45, 86) !important;
+  color: white;
 }
 
 .img-card-products {

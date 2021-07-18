@@ -26,7 +26,15 @@ export const Otherproducts = ({ title, product }) => {
         <div className="row">
           {
             product.slice(0,8).map((item, index) => {
-              return <Products nameProduct={item.name} nameStore={item.shop_name} price={item.price}   image={`${imageProduct}${item.photo}`} />
+              return <Products 
+            nameProduct={item.name}
+            _id = {item.id}
+            nameStore={item.shop_name} 
+            price={item.price} qty={item.qty_order}
+            ratting={item.rating_star}
+            status={item.product_type}   
+            image={`${imageProduct}${item.photo}`}
+             />
             })
           }
         

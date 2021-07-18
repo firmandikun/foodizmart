@@ -11,7 +11,7 @@ import { CardStore } from "../atom/cardStore";
 import { LoadingComponent } from "../atom/loading";
 import { useHistory, withRouter } from "react-router";
 import { useSelector } from "react-redux";
-import { START_FETCHING_ADRESS  } from "../features/locations/constants";
+import { START_FETCHING_ADRESS } from "../features/locations/constants";
 import axios from "axios";
 
 const Home = () => {
@@ -190,8 +190,7 @@ const Home = () => {
             state: { cari: seacrh, categoryId: "" },
           })
         }
-
-        address={state.data.address}
+        address={`${state.data.provinsi},${state.data.kabupaten}`}
         value={seacrh}
         handleSubmit={handleSubmit}
         search={keywordSearch}
@@ -202,8 +201,10 @@ const Home = () => {
         </div>
         <Slider {...settings}>
           {category.map((categ, index) => {
-            return (
-              isLoading ? <LoadingComponent/>  : <div key={index}>
+            return isLoading ? (
+              <LoadingComponent />
+            ) : (
+              <div key={index}>
                 <Card
                   image={`${imageCategory}${categ.logo}`}
                   name={categ.name}
@@ -220,17 +221,15 @@ const Home = () => {
         </Slider>
       </div>
       <div>
-       <Promos image={imageSlider} />
-       </div>
+        <Promos image={imageSlider} />
+      </div>
       <div className="container p-0 list-product">
         <div className="title d-flex align-items-center py-3">
           <h5 className="m-0">Produk</h5>
         </div>
         <div className="row">
           {product.slice(0, seeAllProduct).map((product, index) => {
-            return isLoading ? (
-              <LoadingComponent />
-            ) : (
+            return (
               <Products
                 image={`${imageProducts}${product.photo}`}
                 nameProduct={product.name}
@@ -241,10 +240,11 @@ const Home = () => {
                 key={index}
                 _id={product.id}
                 qty={product.qty_order}
-               ratting={product.rating_star}
+                ratting={product.rating_star}
               />
             );
           })}
+          {}
         </div>
 
         <div className="row pr-2">
@@ -270,8 +270,10 @@ const Home = () => {
         </div>
         <div className="row">
           {store.slice(0, seeAllStore).map((store, index) => {
-            return (
-            isLoading ? ( <LoadingComponent /> ) : <CardStore
+            return isLoading ? (
+              <LoadingComponent />
+            ) : (
+              <CardStore
                 name={store.name}
                 address={store.address}
                 id={store.id}
