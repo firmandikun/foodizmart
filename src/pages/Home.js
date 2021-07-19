@@ -25,14 +25,15 @@ const Home = () => {
   const [seeAllProduct, setSeeAllProducts] = React.useState(8);
   const [seacrh, setSeacrh] = React.useState();
   const [imageSlider, setImageSleder] = React.useState(null);
-  const [keywordSearch] = React.useState("search product...");
+  const [keywordSearch] = React.useState("Search For Product...");
   const [isLoading, setLoading] = React.useState(true);
+  const state = useSelector((state) => state.address);
+  const address = `${state.data.provinsi}, ${state.data.kabupaten}`;
 
-  const history = useHistory();
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
-  const state = useSelector((state) => state.address);
 
+  const history = useHistory();
   const getSlider = async () => {
     setLoading(true);
     try {
@@ -68,7 +69,6 @@ const Home = () => {
           },
         }
       );
-
       if (response.data.status === "success") {
         setProduct(response.data.data.product_by_arround_you);
         setStore(response.data.data.shop_by_arround_you);
@@ -190,7 +190,7 @@ const Home = () => {
             state: { cari: seacrh, categoryId: "" },
           })
         }
-        address={`${state.data.provinsi},${state.data.kabupaten}`}
+        address={address}
         value={seacrh}
         handleSubmit={handleSubmit}
         search={keywordSearch}

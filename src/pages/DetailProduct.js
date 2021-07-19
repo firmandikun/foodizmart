@@ -91,10 +91,10 @@ const DetailProduct = () => {
 
   React.useEffect(() => {
     getSimiliarProduct();
-  }, []);
+  }, [otherProduct, order]);
   React.useEffect(() => {
     detailProducts();
-  }, []);
+  }, [otherProduct]);
 
   return (
     <>
@@ -162,7 +162,7 @@ const DetailProduct = () => {
                           +
                         </button>
                         <input
-                          type="number"
+                          type="text"
                           class="form-control text-center rounded-0"
                           placeholder={order}
                           aria-label="Example text with two button addons"

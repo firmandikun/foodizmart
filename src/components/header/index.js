@@ -8,7 +8,6 @@ import { Collapse, Navbar, Nav, NavItem, NavLink } from "reactstrap";
 import { Link } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
 
 const useStyles = makeStyles({
   list: {
@@ -28,14 +27,17 @@ export const Header = ({
   address,
   handleSubmit,
   search,
-  handleLocations,
 }) => {
   const [drawel, setDrawel] = React.useState(false);
   const classes = useStyles();
   const toggleDrawer = (open) => (event) => {
     setDrawel(open);
   };
-  
+
+  const [alamat, setAlamat] = React.useState();
+  const handleLocations = () => {
+    setAlamat("jakarta");
+  };
 
   return (
     <div>
@@ -80,7 +82,7 @@ export const Header = ({
               <input
                 type="text"
                 className="shadow-none border-0 form-control pl-0"
-                placeholder="Search for Products.."
+                placeholder={search || "Search For Product..."}
                 aria-describedby="basic-addon1"
                 placeholder={search}
                 onChange={onChange}
@@ -155,17 +157,15 @@ export const Header = ({
                 aria-labelledby="navbarDropdown"
               >
                 <span className="text-center mb-3">Pilih Lokasi </span>
-
                 <ul
                   class="list-group list-group-flush"
                   style={{ cursor: "pointer" }}
                 >
+                  <li class="list-group-item">Yogyakarta</li>
                   <li class="list-group-item" onClick={handleLocations}>
-                    Yogyakarta
+                    Jakarta
                   </li>
-                  <li class="list-group-item">Jakarta</li>
                   <li class="list-group-item">Jawa Tengah</li>
-                  <li class="list-group-item">Jawa Barat</li>
                 </ul>
               </div>
             </div>
@@ -180,7 +180,7 @@ export const Header = ({
                   type="text"
                   className="form-control"
                   id="inlineFormInputGroupUsername2"
-                  placeholder={search}
+                  placeholder={search || "Search For Product..."}
                   onChange={onChange}
                   id="navbarDropdown"
                   role="button"
