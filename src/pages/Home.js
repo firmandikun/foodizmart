@@ -8,11 +8,17 @@ import { Footer } from "../components/footer";
 import { Header } from "../components/header";
 import { Promos } from "../components/promos";
 import { CardStore } from "../atom/cardStore";
-import { LoadingComponent } from "../atom/loading";
+import {
+  LoadingCardStore,
+  LoadingCategory,
+  LoadingComponent,
+  LoadingInformation,
+} from "../atom/loading";
 import { useHistory, withRouter } from "react-router";
 import { useSelector } from "react-redux";
 import { START_FETCHING_ADRESS } from "../features/locations/constants";
 import axios from "axios";
+import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
 
 const Home = () => {
   const [product, setProduct] = React.useState([]);
@@ -25,14 +31,14 @@ const Home = () => {
   const [seeAllProduct, setSeeAllProducts] = React.useState(8);
   const [seacrh, setSeacrh] = React.useState();
   const [imageSlider, setImageSleder] = React.useState(null);
-  const [keywordSearch] = React.useState("Search For Product...");
+  const [keywordSearch] = React.useState("Cari Produk Pilihanmu...");
   const [isLoading, setLoading] = React.useState(true);
+  const [idAddress, setIdAddress] = React.useState();
+  const [levelAddress, setLevelAddress] = React.useState();
   const state = useSelector((state) => state.address);
-  const address = `${state.data.provinsi}, ${state.data.kabupaten}`;
-
+  const address = `${state.data.provinsi}`;
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
-
   const history = useHistory();
   const getSlider = async () => {
     setLoading(true);
@@ -52,13 +58,45 @@ const Home = () => {
     }
   };
 
-  const getProducts = async (state) => {
-    setLoading(true);
+  const currentLocations = async (state) => {
+    console.log(state);
     var bodyFormdata = new FormData();
     bodyFormdata.append("google[kelurahan][name]", state.data.kelurahan);
     bodyFormdata.append("google[kecamatan][name]", state.data.kecamatan);
     bodyFormdata.append("google[kabupaten][name]", state.data.kabupaten);
     bodyFormdata.append("google[provinsi][name]", state.data.provinsi);
+    try {
+      const response = await axios.post(
+        "https://foodi.otiza.com/apiv1/regional/get-current-location",
+        bodyFormdata,
+        {
+          headers: {
+            Authorization: authBasic,
+          },
+        }
+      );
+      if (response.data.status === "success") {
+        setIdAddress(response.data.data.id);
+        setLevelAddress(response.data.data.level);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
+  const getProducts = async () => {
+    setLoading(true);
+    var bodyFormdata = new FormData();
+    if (levelAddress == "kelurahan") {
+      bodyFormdata.append("regional[kelurahan][id]", idAddress);
+    } else if (levelAddress == "kecamatan") {
+      bodyFormdata.append("regional[kecamatan][id]", idAddress);
+    } else if (levelAddress == "kabupaten") {
+      bodyFormdata.append("regional[kabupaten][id]", idAddress);
+    } else if (levelAddress == "provinsi") {
+      bodyFormdata.append("regional[provinsi][id]", idAddress);
+    }
     try {
       const response = await axios.post(
         "https://foodi.otiza.com/apiv1/home/dashboard",
@@ -70,8 +108,34 @@ const Home = () => {
         }
       );
       if (response.data.status === "success") {
-        setProduct(response.data.data.product_by_arround_you);
-        setStore(response.data.data.shop_by_arround_you);
+        let product_by_arround_you = [
+          ...response.data.data.product_by_arround_you,
+        ];
+        let currentLocation = state.data.cordinate;
+        product_by_arround_you.map((val) => {
+          var nearby_m = haversineDistance(currentLocation, {
+            latitude: val.shop_latitude,
+            longitude: val.shop_longitude,
+          });
+          var nearby_km = nearby_m / 1000;
+          val.distance = nearby_km.toFixed(1);
+          return val;
+        });
+
+        let shop_by_arround_you = [...response.data.data.shop_by_arround_you];
+
+        shop_by_arround_you.map((val) => {
+          var nearby_m = haversineDistance(currentLocation, {
+            latitude: val.latitude,
+            longitude: val.longitude,
+          });
+          var nearby_km = nearby_m / 1000;
+          val.distance = nearby_km.toFixed(1);
+          return val;
+        });
+
+        setProduct(product_by_arround_you);
+        setStore(shop_by_arround_you);
         setCategory(response.data.data.top_category);
         setImageCategory(
           response.data.data.support.base_url["product-category"].original
@@ -93,19 +157,16 @@ const Home = () => {
   };
 
   React.useEffect(() => {
-    getSlider();
-  }, []);
-
-  React.useEffect(() => {
     if (state.type === START_FETCHING_ADRESS) {
-      getProducts(state);
+      getProducts();
+      getSlider();
+      currentLocations(state);
     }
   }, [state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
-
   const settings = {
     className: "center",
     infinite: true,
@@ -119,7 +180,7 @@ const Home = () => {
           className: "center",
           centerMode: true,
           infinite: true,
-          centerPadding: "60px",
+          centerPadding: "90px",
           slidesToShow: 1,
           autoplay: true,
           slidesToScroll: 1,
@@ -200,10 +261,12 @@ const Home = () => {
           <h5 className="m-0">Kategori</h5>
         </div>
         <Slider {...settings}>
+          {isLoading &&
+            [...Array(6)].map(() => {
+              return <LoadingCategory />;
+            })}
           {category.map((categ, index) => {
-            return isLoading ? (
-              <LoadingComponent />
-            ) : (
+            return (
               <div key={index}>
                 <Card
                   image={`${imageCategory}${categ.logo}`}
@@ -215,27 +278,42 @@ const Home = () => {
                     })
                   }
                 />
+                
               </div>
             );
           })}
         </Slider>
       </div>
       <div>
-        <Promos image={imageSlider} />
+        <div className="container p-0 ">
+          <div className="py-3 osahan-promos">
+            <h5 className="text-left m-0">Informasi</h5>
+          </div>
+          <Promos image={imageSlider} />
+        </div>
       </div>
       <div className="container p-0 list-product">
         <div className="title d-flex align-items-center py-3">
           <h5 className="m-0">Produk</h5>
         </div>
         <div className="row">
+          {isLoading &&
+            [...Array(8)].map(() => {
+              return <LoadingComponent />;
+            })}
+
           {product.slice(0, seeAllProduct).map((product, index) => {
             return (
               <Products
                 image={`${imageProducts}${product.photo}`}
                 nameProduct={product.name}
-                location="yogyakarta, condong catur"
+                location={product.shop_address}
                 nameStore={product.shop_name}
-                status={product.product_type}
+                status={
+                  product.product_type === "readystock"
+                    ? ""
+                    : product.product_type
+                }
                 price={product.price}
                 key={index}
                 _id={product.id}
@@ -246,7 +324,6 @@ const Home = () => {
           })}
           {}
         </div>
-
         <div className="row pr-2">
           <button
             className="btn btn-outline-danger ml-auto"
@@ -269,16 +346,19 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
+          {isLoading &&
+            [...Array(3)].map(() => {
+              return <LoadingCardStore />;
+            })}
           {store.slice(0, seeAllStore).map((store, index) => {
-            return isLoading ? (
-              <LoadingComponent />
-            ) : (
+            return (
               <CardStore
                 name={store.name}
                 address={store.address}
                 id={store.id}
                 key={index}
                 image={`${imageStore}${store.logo}`}
+                ratting={store.rating}
               />
             );
           })}

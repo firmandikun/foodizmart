@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router";
-export const CardStore = ({ name, id, image, address }) => {
+import icontRattig from "../../assets/rating.png";
+export const CardStore = ({ name, id, image, address, ratting, distance }) => {
   const history = useHistory();
   return (
     <div className="col-12 col-md-4 mb-3">
@@ -8,19 +9,37 @@ export const CardStore = ({ name, id, image, address }) => {
         onClick={() => history.push(`/detailStore/${id}`)}
         className="text-dark text-decoration-none"
       >
-        <div className=" list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm ">
-          <div className="recommend-slider2 rounded mb-0">
-            <div className="osahan-slider-item mx-auto my-2 p-2 card-store rounded">
+        <div className=" list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm p-3 ">
+          <div className="recommend-slider2 rounded mb-0 ">
+            <div className="osahan-slider-item mx-auto rounded">
               <img
                 src={image}
-                className="img-fluid img-card-products mx-auto rounded shadow-sm"
-                alt="Responsive image"
+                className="img-fluid  mx-auto img-card-store rounded shadow-sm"
+                alt="Responsive "
               />
             </div>
           </div>
-          <div className="p-3 position-relative">
-            <h6 className="mb-1 font-weight-bold text-success">{name}</h6>
-            <p className="text-muted">{address} </p>
+          <div className=" mt-3 position-relative">
+            <h6
+              className="mb-1 font-weight-bold text-success text-left "
+              style={{ cursor: "pointer" }}
+            >
+              {name}
+            </h6>
+            <div className="d-flex ">
+              <p className="text-muted text-left ">
+                {address} <span className="ml-2"> | </span>{" "}
+              </p>
+
+              <div className="ratting d-flex ml-1 ">
+                <div className="ratting ml-2 ">
+                  <p className="text-muted text-left "> {ratting} </p>
+                </div>
+                <div className="image-ratting ml-1">
+                  <img src={icontRattig} alt="" style={{ width: 19 }} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </a>

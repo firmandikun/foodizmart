@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 
 
 
@@ -10,7 +10,7 @@ export const Footer = () => {
         <div className="container">
           <div className="row">
             <aside className="col-3">
-              <h6 className="title">Syarat Ketentuan</h6>
+              <Link to="/regulation" className=" h6 title"  >Syarat Ketentuan</Link>
             </aside>
             <aside className="col-3">
               <h6 className="title">Kebijakan Privasi</h6>

@@ -57,23 +57,16 @@ export const Promos = ({ image }) => {
     ],
   };
   return (
-    <div className="container p-0 ">
-      <div className="py-3 osahan-promos">
-        <div className="text-left mb-3">
-          <h5 className="m-0">Informasi</h5>
-        </div>
-        <Slider {...settings}>
-          {image
-            ? image.data.lists.map((img, index) => {
-                return (
-                  <div>
-                    <CardPromos image={`${imageSlider}${img.path}`} />
-                  </div>
-                );
-              })
-            : null}
-        </Slider>
-      </div>
-    </div>
+    <Slider {...settings}>
+      {image
+        ? image.data.lists.map((img, index) => {
+            return (
+              <div>
+                <CardPromos image={`${imageSlider}${img.path}`} />
+              </div>
+            );
+          })
+        : null}
+    </Slider>
   );
 };

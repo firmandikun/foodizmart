@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export const Breadcrumb = () => {
+export const Breadcrumb = ({name}) => {
   return (
     <nav aria-label="breadcrumb" class="breadcrumb mb-0  ">
       <div className="container p-0">
@@ -16,7 +16,7 @@ export const Breadcrumb = () => {
             aria-current="page"
             style={{ listStyle: "none" }}
           >
-            Product details
+           {name}
           </li>
         </ol>
       </div>

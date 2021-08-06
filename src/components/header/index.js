@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import "./header.css";
 import Logo from "../../assets/logo.png";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
 import { FaSistrix } from "react-icons/fa";
 import { Collapse, Navbar, Nav, NavItem, NavLink } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
-
+import { useDispatch, useSelector } from "react-redux";
+import locationIcone from "../../assets/location.png";
+import { fecthDataAddress } from "../../features/locations/action";
+import useGeoLocation from "../hooks/useGeoLocation";
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -21,12 +24,14 @@ const useStyles = makeStyles({
   },
 });
 
+let district = ["jakarta selatan", "Yogyakarta", "bekasi", "kebumen"];
+
 export const Header = ({
   onChange,
   onPress,
-  address,
   handleSubmit,
   search,
+  location,
 }) => {
   const [drawel, setDrawel] = React.useState(false);
   const classes = useStyles();
@@ -34,10 +39,11 @@ export const Header = ({
     setDrawel(open);
   };
 
-  const [alamat, setAlamat] = React.useState();
-  const handleLocations = () => {
-    setAlamat("jakarta");
-  };
+  const state = useSelector((state) => state.address);
+  const address = `${state.data.address}`;
+  const [alamat, setAlamat] = React.useState(state.kabupaten);
+  const dispatch = useDispatch();
+  const locations = useGeoLocation();
 
   return (
     <div>
@@ -79,10 +85,11 @@ export const Header = ({
                   <FaSistrix />
                 </button>
               </div>
+
               <input
                 type="text"
                 className="shadow-none border-0 form-control pl-0"
-                placeholder={search || "Search For Product..."}
+                placeholder={search || "Cari Produk Pilihanmu..."}
                 aria-describedby="basic-addon1"
                 placeholder={search}
                 onChange={onChange}
@@ -149,23 +156,49 @@ export const Header = ({
                   <p className="text-elipps text-muted mb-0 small">
                     lokasi saat ini
                   </p>
-                  <div className="address"> {address} </div>
+                  <div className="address">{alamat || address}</div>
                 </div>
               </a>
               <div
                 className="dropdown-menu osahan-select-loaction p-3"
                 aria-labelledby="navbarDropdown"
               >
+                <span className="text-center mb-3">Pilih Lokasi Otomatis </span>
+                <div className="d-flex my-2" style={{ cursor: "pointer" }}>
+                  <img src={locationIcone} alt="" width={20} />
+                  <li
+                    className="ml-2"
+                    onClick={() => {
+                      setAlamat(address);
+                      dispatch(fecthDataAddress(locations, ""));
+                    }}
+                  >
+                    Lokasi Saat Ini..
+                  </li>
+                </div>
                 <span className="text-center mb-3">Pilih Lokasi </span>
                 <ul
                   class="list-group list-group-flush"
-                  style={{ cursor: "pointer" }}
+                  style={{
+                    cursor: "pointer",
+                    height: 80,
+                    overflowY: "scroll",
+                    scrollbarWidth: "none",
+                  }}
                 >
-                  <li class="list-group-item">Yogyakarta</li>
-                  <li class="list-group-item" onClick={handleLocations}>
-                    Jakarta
-                  </li>
-                  <li class="list-group-item">Jawa Tengah</li>
+                  {district.map((item) => {
+                    return (
+                      <li
+                        className="list-group-item"
+                        onClick={() => {
+                          setAlamat(item);
+                          dispatch(fecthDataAddress(item, "address"));
+                        }}
+                      >
+                        {item}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
@@ -179,20 +212,19 @@ export const Header = ({
                 <input
                   type="text"
                   className="form-control"
-                  id="inlineFormInputGroupUsername2"
-                  placeholder={search || "Search For Product..."}
+                  placeholder={search || "Cari Produk Pilihanmu..."}
                   onChange={onChange}
-                  id="navbarDropdown"
-                  role="button"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
                 />
+
                 <div className="input-group-prepend">
                   <button
                     type="submit"
                     onClick={onPress}
                     className="btn btn-danger rounded-right font-weight-bold ml-1 "
+                    style={{ backgroundColor: "#f52d56", border: "none" }}
                   >
                     cari
                   </button>
@@ -200,7 +232,10 @@ export const Header = ({
               </form>
             </div>
           </div>
-          <a className="btn btn-danger ml-auto font-weight-bold ">
+          <a
+            className="btn btn-danger ml-auto font-weight-bold"
+            style={{ backgroundColor: "#f52d56", border: "none" }}
+          >
             Menjadi seler
           </a>
         </nav>
@@ -237,6 +272,7 @@ export const Header = ({
           <button
             type="button"
             className="list-group-item list-group-item-action"
+            to="/regulation"
           >
             F.A.Q.
           </button>
@@ -264,17 +300,20 @@ export const Header = ({
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className="text-white" href="/products">
+                <NavLink href="/products" className="text-white">
                   Produk
                 </NavLink>
               </NavItem>
+              {/* <Link type="button" className=" text-white pl-0" to="/products">
+                Produk
+              </Link> */}
               <NavItem>
-                <NavLink className="text-white" href="/">
+                <NavLink className="text-white" href="/regulation">
                   F.A.Q.
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className="text-white" href="/">
+                <NavLink className="text-white" href="/regulation">
                   Tentang Kami
                 </NavLink>
               </NavItem>

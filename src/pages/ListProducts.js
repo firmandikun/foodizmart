@@ -7,8 +7,9 @@ import icontFillter from "../../src/assets/fillter.png";
 import axios from "axios";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector } from "react-redux";
 import { LoadingComponent } from "../atom/loading";
+import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   list: {
@@ -41,23 +42,29 @@ export const ListProducts = (props) => {
   const [keywordSearch] = React.useState(
     props.location.state !== undefined
       ? props.location.state.cari
-      : "search prodcuts..."
+      : "Cari Produk Pilihanmu"
   );
+
+  const [hasMore, setHasMore] = React.useState(true);
+
   const [isloading, setLoading] = React.useState(false);
+  const state = useSelector((state) => state.address);
+  const [page] = React.useState(1);
 
   const toggleDrawer = (open) => (event) => {
     setDrawel(open);
   };
-  const state = useSelector((state) => state.address);
 
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
   const fecthData = (params) => {
+    setLoading(true);
     var bodyFormdata = new FormData();
     bodyFormdata.append("search_type", "product");
     bodyFormdata.append("search_key", params.cari);
     bodyFormdata.append("filter[product_categor_id]", params.categoryId);
-    setLoading(true);
+    bodyFormdata.append("pagination", page);
+
     axios
       .post(
         "https://foodi.otiza.com/apiv1/product/search-product",
@@ -70,8 +77,67 @@ export const ListProducts = (props) => {
       )
       .then((res) => {
         if (res.data.status === "success") {
-          setFillterProducts(res.data.data.product_result);
+          let filterProduk = [...res.data.data.product_result];
+
+          let currentLocation = state.data.cordinate;
+
+          filterProduk.map((val) => {
+            var nearby_m = haversineDistance(currentLocation, {
+              latitude: val.shop_latitude,
+              longitude: val.shop_longitude,
+            });
+            var nearby_km = nearby_m / 1000;
+            val.distance = nearby_km.toFixed(1);
+            return val;
+          });
+          setFillterProducts(filterProduk);
           setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const fecthMoreData = (params) => {
+    var bodyFormdata = new FormData();
+    bodyFormdata.append("search_type", "product");
+    bodyFormdata.append("search_key", params.cari);
+    bodyFormdata.append("filter[product_categor_id]", params.categoryId);
+    bodyFormdata.append("pagination", page + 1);
+
+    axios
+      .post(
+        "https://foodi.otiza.com/apiv1/product/search-product",
+        bodyFormdata,
+        {
+          headers: {
+            Authorization: authBasic,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.status === "success") {
+          setHasMore(false);
+          if (res.data.data.product_result.length > 0) {
+            let filterProduk = [...res.data.data.product_result];
+
+            let currentLocation = state.data.cordinate;
+
+            filterProduk.map((val) => {
+              var nearby_m = haversineDistance(currentLocation, {
+                latitude: val.shop_latitude,
+                longitude: val.shop_longitude,
+              });
+              var nearby_km = nearby_m / 1000;
+              val.distance = nearby_km.toFixed(1);
+              return val;
+            });
+            console.log("seacr product :", filterProduk);
+            setTimeout(() => {
+              setFillterProducts(fillterProducts.concat(filterProduk));
+            }, 1500);
+          }
         }
       })
       .catch((err) => {
@@ -84,11 +150,12 @@ export const ListProducts = (props) => {
       cari: seacrh,
       categoryId: categoryId,
     });
-  }, []);
+  }, [state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+
   return (
     <div>
       <Header
@@ -99,11 +166,10 @@ export const ListProducts = (props) => {
             categoryId: categoryId,
           })
         }
-        address={state.data.address}
         handleSubmit={handleSubmit}
         search={keywordSearch}
       />
-      <Breadcrumb />
+      <Breadcrumb name="List Produk" />
       <div className="container p-0 list-product">
         <div className="title d-flex align-items-center py-3">
           <h4 className="m-0">Pick's Today</h4>
@@ -156,7 +222,6 @@ export const ListProducts = (props) => {
               );
             })}
           </div>
-
           {/* sort */}
           <div class="list-group" style={{ width: 350 }}>
             <button
@@ -226,20 +291,48 @@ export const ListProducts = (props) => {
             >
               Order Terbanyak
             </button>
+            <button
+              type="button"
+              className="list-group-item list-group-item-action d-flex justify-content-between "
+              activeClassName="active"
+              onClick={() => {
+                let data = [...fillterProducts];
+                data.sort((a, b) => {
+                  return b.distance - a.distance;
+                });
+                setFillterProducts(data);
+                setDrawel(false);
+              }}
+            >
+              Terdekat
+            </button>
           </div>
         </Drawer>
 
         <div className="row">
+          {isloading && (
+            <div className="d-flex">
+              <LoadingComponent />
+              <LoadingComponent />
+              <LoadingComponent />
+              <LoadingComponent />
+            </div>
+          )}
+
           {fillterProducts.map((product, index) => {
             return isloading === true ? (
-              LoadingComponent
+              <LoadingComponent />
             ) : (
               <Products
                 image={`${imageProduct}${product.photo}`}
                 nameProduct={product.name}
-                location="yogyakarta, condong catur"
+                location={product.shop_address}
                 nameStore={product.shop_name}
-                status={product.product_type}
+                status={
+                  product.product_type === "readystock"
+                    ? ""
+                    : product.product_type
+                }
                 price={product.price}
                 key={index}
                 _id={product.id}
