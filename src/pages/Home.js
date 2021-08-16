@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { START_FETCHING_ADRESS } from "../features/locations/constants";
 import axios from "axios";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
+import { useRef } from "react";
 
 const Home = () => {
   const [product, setProduct] = React.useState([]);
@@ -30,7 +31,9 @@ const Home = () => {
   const [seeAllStore, setSeeAllStore] = React.useState(3);
   const [seeAllProduct, setSeeAllProducts] = React.useState(8);
   const [seacrh, setSeacrh] = React.useState();
-  const [imageSlider, setImageSleder] = React.useState(null);
+  const [slider, setSleder] = React.useState(null);
+  const [sliderImage, setSlederImage] = React.useState(null);
+
   const [keywordSearch] = React.useState("Cari Produk Pilihanmu...");
   const [isLoading, setLoading] = React.useState(true);
   const [idAddress, setIdAddress] = React.useState();
@@ -40,6 +43,10 @@ const Home = () => {
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
   const history = useHistory();
+
+  const executeScroll = () => {
+    console.log("");
+  };
   const getSlider = async () => {
     setLoading(true);
     try {
@@ -51,7 +58,8 @@ const Home = () => {
           },
         }
       );
-      setImageSleder(response.data);
+      setSleder(response.data);
+
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -59,7 +67,6 @@ const Home = () => {
   };
 
   const currentLocations = async (state) => {
-    console.log(state);
     var bodyFormdata = new FormData();
     bodyFormdata.append("google[kelurahan][name]", state.data.kelurahan);
     bodyFormdata.append("google[kecamatan][name]", state.data.kecamatan);
@@ -83,7 +90,6 @@ const Home = () => {
       console.error(err);
     }
   };
-
 
   const getProducts = async () => {
     setLoading(true);
@@ -140,8 +146,9 @@ const Home = () => {
         setImageCategory(
           response.data.data.support.base_url["product-category"].original
         );
-        setImageProducts(response.data.data.support.base_url.product.medium);
-        setImageStore(response.data.data.support.base_url.shop.medium);
+        setImageProducts(response.data.data.support.base_url.product.original);
+        setSlederImage(response.data.data.support.base_url.slider.original);
+        setImageStore(response.data.data.support.base_url.shop.original);
         localStorage.setItem(
           "dasboard",
           JSON.stringify({
@@ -149,6 +156,7 @@ const Home = () => {
             support: response.data.data.support,
           })
         );
+
         setLoading(false);
       }
     } catch (err) {
@@ -180,13 +188,14 @@ const Home = () => {
           className: "center",
           centerMode: true,
           infinite: true,
-          centerPadding: "90px",
+          centerPadding: "80px",
           slidesToShow: 1,
           autoplay: true,
           slidesToScroll: 1,
           arrows: false,
         },
       },
+
       {
         breakpoint: 1200,
         settings: {
@@ -219,7 +228,7 @@ const Home = () => {
           centerMode: true,
           infinite: true,
           centerPadding: "110px",
-          slidesToShow: 1,
+          slidesToShow: 2,
           autoplay: true,
           slidesToScroll: 1,
           arrows: false,
@@ -231,8 +240,8 @@ const Home = () => {
           className: "center",
           centerMode: true,
           infinite: true,
-          centerPadding: "110px",
-          slidesToShow: 2,
+          centerPadding: "170px",
+          slidesToShow: 1,
           autoplay: true,
           slidesToScroll: 1,
           arrows: false,
@@ -278,7 +287,6 @@ const Home = () => {
                     })
                   }
                 />
-                
               </div>
             );
           })}
@@ -289,7 +297,7 @@ const Home = () => {
           <div className="py-3 osahan-promos">
             <h5 className="text-left m-0">Informasi</h5>
           </div>
-          <Promos image={imageSlider} />
+          <Promos image={`${sliderImage}`} slider={slider} />
         </div>
       </div>
       <div className="container p-0 list-product">
@@ -301,7 +309,6 @@ const Home = () => {
             [...Array(8)].map(() => {
               return <LoadingComponent />;
             })}
-
           {product.slice(0, seeAllProduct).map((product, index) => {
             return (
               <Products
@@ -319,6 +326,7 @@ const Home = () => {
                 _id={product.id}
                 qty={product.qty_order}
                 ratting={product.rating_star}
+                scroll={executeScroll}
               />
             );
           })}

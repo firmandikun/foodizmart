@@ -235,8 +235,9 @@ export const Header = ({
           <a
             className="btn btn-danger ml-auto font-weight-bold"
             style={{ backgroundColor: "#f52d56", border: "none" }}
+            href="/join_merchant"
           >
-            Menjadi seler
+            Join Merchant
           </a>
         </nav>
       </div>
@@ -290,6 +291,7 @@ export const Header = ({
         light
         expand="md"
         className="bg-color-head headerNav"
+        // style={{ position: "fixed", top: 0 }}
       >
         <div className="container pl-1 ">
           <Collapse navbar>
@@ -308,12 +310,12 @@ export const Header = ({
                 Produk
               </Link> */}
               <NavItem>
-                <NavLink className="text-white" href="/regulation">
+                <NavLink className="text-white" href="/faq">
                   F.A.Q.
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className="text-white" href="/regulation">
+                <NavLink className="text-white" href="/about">
                   Tentang Kami
                 </NavLink>
               </NavItem>

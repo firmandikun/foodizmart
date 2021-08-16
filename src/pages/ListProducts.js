@@ -10,6 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { LoadingComponent } from "../atom/loading";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
 import { useSelector } from "react-redux";
+import { useRef } from "react";
 
 const useStyles = makeStyles({
   list: {
@@ -35,7 +36,8 @@ export const ListProducts = (props) => {
     JSON.parse(localStorage.getItem("dasboard")).category
   );
   const [imageProduct] = React.useState(
-    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product.medium
+    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product
+      .original
   );
   const [drawel, setDrawel] = React.useState(false);
   const classes = useStyles();
@@ -49,10 +51,15 @@ export const ListProducts = (props) => {
 
   const [isloading, setLoading] = React.useState(false);
   const state = useSelector((state) => state.address);
-  const [page] = React.useState(1);
+  const [page, setPage] = React.useState(8);
 
   const toggleDrawer = (open) => (event) => {
     setDrawel(open);
+  };
+
+  const executeScroll = () => {
+    // ref.current.scrollIntoView({ block: "end", behavior: "smooth" });
+    console.log("test");
   };
 
   const authBasic =
@@ -63,7 +70,7 @@ export const ListProducts = (props) => {
     bodyFormdata.append("search_type", "product");
     bodyFormdata.append("search_key", params.cari);
     bodyFormdata.append("filter[product_categor_id]", params.categoryId);
-    bodyFormdata.append("pagination", page);
+    // bodyFormdata.append("pagination", page);
 
     axios
       .post(
@@ -104,7 +111,7 @@ export const ListProducts = (props) => {
     bodyFormdata.append("search_type", "product");
     bodyFormdata.append("search_key", params.cari);
     bodyFormdata.append("filter[product_categor_id]", params.categoryId);
-    bodyFormdata.append("pagination", page + 1);
+    // bodyFormdata.append("pagination", page + 1);
 
     axios
       .post(
@@ -133,7 +140,6 @@ export const ListProducts = (props) => {
               val.distance = nearby_km.toFixed(1);
               return val;
             });
-            console.log("seacr product :", filterProduk);
             setTimeout(() => {
               setFillterProducts(fillterProducts.concat(filterProduk));
             }, 1500);
@@ -309,7 +315,7 @@ export const ListProducts = (props) => {
           </div>
         </Drawer>
 
-        <div className="row">
+        <div className="row listProducts ">
           {isloading && (
             <div className="d-flex">
               <LoadingComponent />
@@ -319,7 +325,7 @@ export const ListProducts = (props) => {
             </div>
           )}
 
-          {fillterProducts.map((product, index) => {
+          {fillterProducts.slice(0, page).map((product, index) => {
             return isloading === true ? (
               <LoadingComponent />
             ) : (
@@ -338,9 +344,27 @@ export const ListProducts = (props) => {
                 _id={product.id}
                 qty={product.qty_order}
                 ratting={product.rating_star}
+                scroll={executeScroll}
               />
             );
           })}
+        </div>
+        <div className="row pr-4 mb-2">
+          {page === fillterProducts.length ? (
+            <a
+              className="btn btn-outline-danger disabled ml-auto"
+              onClick={() => setPage(page + 4)}
+            >
+              {page === fillterProducts.length ? "semua produk" : "lainya"}
+            </a>
+          ) : (
+            <a
+              className="btn btn-outline-danger  ml-auto"
+              onClick={() => setPage(page + 4)}
+            >
+              {page === fillterProducts.length ? "semua produk" : "lainya"}
+            </a>
+          )}
         </div>
       </div>
       <Footer />

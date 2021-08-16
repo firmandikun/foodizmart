@@ -3,25 +3,30 @@ import { Header } from "../components/header";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { Products } from "../atom/products";
 import icontRattig from "../assets/rating.png";
+import maps from "../assets/maps.svg";
+import phone from "../assets/phone.svg";
 import { Footer } from "../components/footer";
 import axios from "axios";
 import { withRouter } from "react-router";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { convertToIdr } from "../assets/js/convert (1)";
+import { convertTimeAgo, convertToIdr } from "../assets/js/convert (1)";
 import {
   LoadingComponent,
   LoadingStore,
   LoadingStoreAlert,
 } from "../atom/loading";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
+import { CardRiview } from "../atom/cardRiview";
+import { useRef } from "react";
 
 const DetailStore = (props) => {
   const [detailStore, setDetailStore] = React.useState({});
   const [riview, setRiviewProducts] = React.useState([]);
   const [productStore, setProductsStore] = React.useState([]);
   const [imageProduct] = React.useState(
-    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product.small
+    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product
+      .original
   );
   const [isLoading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState(8);
@@ -32,8 +37,14 @@ const DetailStore = (props) => {
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
   const history = useHistory();
-  // const state = useSelector((state) => state.address);
+  const [limitRiview, setLimitRiview] = React.useState(3);
+  const scrollProduct = useRef(null);
 
+  const scrollToTop = () => {
+    console.log("");
+  };
+  // const state = useSelector((state) => state.address);
+  const urlImage = "https://foodi.otiza.com/asset/image/shop/original/";
   const getProductStore = () => {
     setLoading(true);
     var bodyFormdata = new FormData();
@@ -95,7 +106,7 @@ const DetailStore = (props) => {
     var bodyFormdata = new FormData();
     bodyFormdata.append("shop_id", props.match.params.shop_id);
     axios
-      .post("http://foodi.otiza.com/apiv1/review/lists", bodyFormdata, {
+      .post("https://foodi.otiza.com/apiv1/review/lists", bodyFormdata, {
         headers: {
           Authorization: authBasic,
         },
@@ -103,6 +114,7 @@ const DetailStore = (props) => {
       .then((res) => {
         if ((res.data.status = "success")) {
           setRiviewProducts(res.data.data.lists);
+          // setPhoto(res.data.data.list)
           setDataRiview(res.data.data.total_data);
         }
       })
@@ -110,7 +122,7 @@ const DetailStore = (props) => {
         console.log(err);
       });
   };
-
+  // console.log("products :", detailStore);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -168,69 +180,116 @@ const DetailStore = (props) => {
         {isLoading ? (
           <LoadingStore />
         ) : (
-          <div className="row bg-white rounded shadow-sm d-flex align-items-center justify-content-around px-2 py-2 ">
+          <div className="row bg-white rounded shadow-sm d-flex align-items-center justify-content-around  ">
             <div className="col-lg-2 col-12 storeImage">
               <img
-                src={`http://foodiadmin.otiza.com/asset/image/shop/small/${detailStore.logo}`}
-                alt=""
+                src={`${urlImage}${detailStore.logo}`}
                 className="imgStore"
               />
-              <p className="h6 mt-2"> {detailStore.address} </p>
             </div>
 
-            <div className="col-lg-4 col-md-12 col-sm-12">
-              <h3 className="font-weight-bold text-left">
-                {" "}
-                {detailStore.name}{" "}
-              </h3>
-              <p
-                className=" font-weight-light text-left "
-                style={{ fontSize: 12 }}
+            <div className="col-lg-6 col-md-12 col-sm-12">
+              <h3
+                className="nameStores text-left font-weight-500"
+                style={{ fontSize: 20, color: "#212529" }}
               >
-                Jumlah Riview
-                <span className="font-weight-bold "> {totalRiview} </span>|
-                Jumlah Saldo
-                <span className="font-weight-bold ">
+                {detailStore.name}
+              </h3>
+              <div className="d-flex">
+                <img
+                  src={maps}
+                  alt=""
+                  style={{ width: 11.58, height: 15.75 }}
+                />
+                <p className="ml-2 font-italic " style={{ fontSize: 13 }}>
                   {" "}
-                  {convertToIdr(detailStore.saldo, "Rp.")} |{" "}
-                </span>
-                <br />
-                Phone
-                <span className="font-weight-bold "> {detailStore.phone} </span>
+                  {detailStore.address}{" "}
+                </p>
+              </div>
+              <div className="d-flex" style={{ marginTop: -10 }}>
+                <img
+                  src={phone}
+                  alt=""
+                  style={{ width: 14.78, height: 15.75 }}
+                />
+                <p className="ml-2 " style={{ fontSize: 13 }}>
+                  {detailStore.phone}{" "}
+                </p>
+              </div>
+              <p className="text-muted small text-justify mb-0">
+                {detailStore.description}
               </p>
             </div>
-            <div className="col-lg-4  col-md-12 col-sm-12 ">
-              <div className="p-4 ">
+            <div className="col-lg-4  px-3 col-md-12 col-sm-12 col4Store">
+              <div className="">
                 <div className="pt-2">
-                  <div className="row d-flex justify-content-start p-1 ">
-                    <p className="font-weight-bold ml-1 text-left">status :</p>
-                    <p className="text-muted ml-2">
-                      {detailStore.status_active}
-                    </p>
-                  </div>
+                  <p className="font-weight-bold ml-1 text-left">
+                    Kualitas Toko
+                    <br />
+                    <div
+                      className="d-flex align-items-center "
+                      style={{
+                        fontSize: 18,
+                        fontWeight: "bold",
+                        color: "black",
+                      }}
+                    >
+                      {detailStore.rating}
+                      <img
+                        src={icontRattig}
+                        alt=""
+                        style={{ width: 21.39, height: 20.44 }}
+                        className="ml-1"
+                      />
+                      <img
+                        src={icontRattig}
+                        alt=""
+                        style={{ width: 21.39, height: 20.44 }}
+                        className="ml-1"
+                      />
+                      <img
+                        src={icontRattig}
+                        alt=""
+                        style={{ width: 21.39, height: 20.44 }}
+                        className="ml-1"
+                      />
+                      <img
+                        src={icontRattig}
+                        alt=""
+                        style={{ width: 21.39, height: 20.44 }}
+                        className="ml-1"
+                      />
+                      <img
+                        src={icontRattig}
+                        alt=""
+                        style={{ width: 21.39, height: 20.44 }}
+                        className="ml-1"
+                      />
+
+                      <span className="ml-4 ulasan">
+                        {" "}
+                        {`(${totalRiview} ulasan)`}{" "}
+                      </span>
+                    </div>
+                  </p>
                 </div>
                 <div className="details">
                   <div className="">
-                    <p className="font-weight-bold text-left mb-2">Deskripsi</p>
-                    <p className="text-muted small text-justify mb-0">
-                      {detailStore.description}
+                    <p className="font-weight-bold text-left mb-2">
+                      Produk Terjual
+                    </p>
+                    <p
+                      style={{
+                        fontSize: 18,
+                        fontWeight: "bold",
+                        color: "black",
+                        textAlign: "left",
+                        marginTop: -10,
+                      }}
+                    >
+                      {detailStore.total_product_sold}
                     </p>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="row p-0 m-0">
-              <div className="col-lg-2 col-sm-12 ">
-                Kualitas Produk
-                <div className="d-flex">
-                  <p> {detailStore.rating}</p>
-                  <img
-                    src={icontRattig}
-                    alt=""
-                    className="ml-1"
-                    style={{ width: 15, height: 15 }}
-                  />
                 </div>
               </div>
             </div>
@@ -263,9 +322,14 @@ const DetailStore = (props) => {
                 price={product.price}
                 key={index}
                 _id={product.id}
-                status={product.product_type === "readystock" ? "" : product.product_type }
+                status={
+                  product.product_type === "readystock"
+                    ? ""
+                    : product.product_type
+                }
                 ratting={product.rating_star}
                 distance={product.distance}
+                scroll={scrollToTop}
               />
             );
           })}
@@ -287,35 +351,36 @@ const DetailStore = (props) => {
       <div className="container mt-4">
         <div className="row">
           <div className="title d-flex align-items-center py-4">
-            <h5 className="m-1">List Riview</h5>
+            <h5 className="m-1">Jumlah Rivie {`(${totalRiview})`} </h5>
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-12">
-            {isLoading && <LoadingComponent></LoadingComponent>}
-            {riview.slice(0, 4).map((item, index) => {
+        <div className="row p-0 m-0">
+          <div className="col-12 p-0 m-0 ">
+            {riview.slice(0, limitRiview).map((item, index) => {
               return (
-                <div>
-                  <div className="card mb-3">
-                    <div className="row no-gutters">
-                      <div className="col-md-12">
-                        <div className="card-body text-left">
-                          <p className="card-text">{item.member_name}</p>
-                          <p className="card-text">{item.comment}</p>
-                          <p className="card-text">
-                            <small className="text-muted">
-                              {item.updated_date}
-                            </small>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <CardRiview
+                  riview={item}
+                  linkImage={imageProduct}
+                  name={item.member_name}
+                  time={convertTimeAgo(item.updated_date)}
+                  comment={item.comment}
+                />
               );
             })}
           </div>
+        </div>
+        <div className="row ml-auto pr-3">
+          <button
+            className="btn btn-outline-danger ml-auto mb-3 "
+            onClick={() =>
+              limitRiview === riview.length
+                ? setLimitRiview(3)
+                : setLimitRiview(riview.length)
+            }
+          >
+            {limitRiview === riview.length ? "less more" : "see more"}
+          </button>
         </div>
       </div>
       <Footer />

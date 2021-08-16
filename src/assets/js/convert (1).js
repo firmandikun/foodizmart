@@ -4,7 +4,7 @@
  * @param {*} prefix
  *
  * Convert price integer value into string devided by (.) and give prefix IDR
- * 
+ *
  * How to use -> convertToIdr(10000, "Rp")
  * Result -> Rp 10.000
  *
@@ -218,7 +218,7 @@ export const convertTimeAgo = (data) => {
   } else if (elapsed < month) {
     return Math.round(elapsed / day) + " days ago";
   } else if (elapsed < year) {
-    return Math.round(elapsed / month) + " months ago";
+    return Math.round(elapsed / month) + " bulan yang lalu";
   } else {
     return Math.round(elapsed / year) + " years ago";
   }

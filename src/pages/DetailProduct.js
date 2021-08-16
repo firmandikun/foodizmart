@@ -10,8 +10,12 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Products } from "../atom/products";
 import { convertToIdr } from "../assets/js/convert (1)";
+import share from "../assets/share1.png";
 import { LoadingComponent } from "../atom/loading";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
+import { useRef } from "react";
+import { FacebookShareButton, WhatsappShareButton } from "react-share";
+import { FacebookIcon, WhatsappIcon } from "react-share";
 
 const DetailProduct = () => {
   const { id } = useParams();
@@ -20,14 +24,21 @@ const DetailProduct = () => {
   const [similarProducts, setSimilarProducts] = React.useState([]);
   const state = useSelector((state) => state.address);
   const [keywordSearch] = React.useState("Cari Produk Pilihanmu");
-  const [order, setOrder] = React.useState(1);
   const [harga, setHarga] = React.useState();
   const [imageProduct] = React.useState(
-    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product.medium
+    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product
+      .original
   );
   const [seacrh, setSeacrh] = React.useState();
   const [isLoading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState(8);
+
+
+  const ref = useRef(null);
+
+  const executeScroll = () => {
+    ref.current.scrollIntoView({ block: "end", behavior: "smooth" });
+  };
 
   const history = useHistory();
   const authBasic =
@@ -89,20 +100,6 @@ const DetailProduct = () => {
       );
 
       if (response.data.status === "success") {
-        let product_result = [...response.data.data.product_result];
-        let currentLocation = state.data.cordinate;
-        product_result.map((val) => {
-          var nearby_m = haversineDistance(currentLocation, {
-            latitude: val.shop_latitude,
-            longitude: val.shop_longitude,
-          });
-
-          var nearby_km = nearby_m / 1000;
-
-          val.distance = nearby_km.toFixed(1);
-
-          return val;
-        });
         setSimilarProducts(response.data.data.product_result);
         setLoading(false);
       }
@@ -124,19 +121,21 @@ const DetailProduct = () => {
 
   return (
     <>
-      <Header
-        handleSubmit={handleSubmit}
-        address={state.data.address}
-        handleSubmit={handleSubmit}
-        search={keywordSearch}
-        onChange={(e) => setSeacrh(e.target.value)}
-        onPress={() =>
-          history.push({
-            pathname: "/products",
-            state: { cari: seacrh, categoryId: "" },
-          })
-        }
-      />
+      <div ref={ref}>
+        <Header
+          handleSubmit={handleSubmit}
+          address={state.data.address}
+          handleSubmit={handleSubmit}
+          search={keywordSearch}
+          onChange={(e) => setSeacrh(e.target.value)}
+          onPress={() =>
+            history.push({
+              pathname: "/products",
+              state: { cari: seacrh, categoryId: "" },
+            })
+          }
+        />
+      </div>
       <Breadcrumb name="Produk detail" />
       <div className="container mt-4 ">
         <div className="row">
@@ -153,10 +152,38 @@ const DetailProduct = () => {
                     </h1>
                   </div>
                   <div>
-                    <button className="btn btn-outline-danger">
-                      {" "}
-                      berbagi{" "}
-                    </button>
+                    <div class="btn-group ">
+                      <button
+                        type="button"
+                        className="btn "
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <img src={share} alt="" width={50} />
+                      </button>
+                      <div class="dropdown-menu " style={{ marginRight: 75}}>
+                      <div className="d-flex justify-content-center px-4 py-2"> 
+                      <WhatsappShareButton
+                      url={`${window.location.href}`}
+                      title={"selamat belanja"}
+                      hashtag={"#hashtag"}
+                      description={"aiueo"}
+                      className="dropdown-item"
+                       > 
+                        <WhatsappIcon size={35} round/>
+                      </WhatsappShareButton >
+                        <FacebookShareButton
+                          url={"https://foodizmart.duriansultan.com/"}
+                          quote={"selamat berbelanja"}
+                          description={"aiueo"}
+                          className="Demo__some-network__share-button"
+                        >
+                          <FacebookIcon size={35} round /> 
+                        </FacebookShareButton>
+                      </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -244,12 +271,11 @@ const DetailProduct = () => {
       </div>
 
       <div className="container list-product">
-        <div class="title d-flex align-items-center py-3">
-          <h5 class="m-0"> Product Serupa </h5>
-          <a class="ml-auto btn btn-outline-success btn-sm">See more</a>
+        <div class="title  py-3">
+          <h5 class="m-0 text-left"> Product Serupa </h5>
         </div>
         <div className="row">
-          {similarProducts.slice(0, 8).map((item) => {
+          {similarProducts.slice(0, page).map((item) => {
             return (
               <Products
                 price={item.price}
@@ -264,22 +290,25 @@ const DetailProduct = () => {
                 }
                 _id={item.id}
                 distance={item.distance}
+                scroll={executeScroll}
               />
             );
           })}
         </div>
-        <div class="title d-flex align-items-center py-3">
-          <h5 class="m-0"> Produk Lainyaa </h5>
+        <div className="row pr-2">
           <a
-            class="ml-auto btn btn-outline-success btn-sm"
+            class="ml-auto btn btn-outline-danger btn-sm"
             onClick={() =>
-              page === otherProduct.length
+              page === similarProducts.length
                 ? setPage(8)
-                : setPage(otherProduct.length)
+                : setPage(similarProducts.length)
             }
           >
-            {page === otherProduct.length ? "less more" : "see more"}
+            {page === similarProducts.length ? "less more" : "see more"}
           </a>
+        </div>
+        <div class="title py-3">
+          <h5 class="m-0 text-left"> Produk Lainyaa </h5>
         </div>
         <div className="row">
           {otherProduct.slice(0, page).map((item) => {
@@ -297,9 +326,22 @@ const DetailProduct = () => {
                 }
                 _id={item.id}
                 distance={item.distance}
+                scroll={executeScroll}
               />
             );
           })}
+        </div>
+        <div className="row pr-2">
+          <a
+            class="ml-auto mb-3 btn btn-outline-danger btn-sm"
+            onClick={() =>
+              page === otherProduct.length
+                ? setPage(8)
+                : setPage(otherProduct.length)
+            }
+          >
+            {page === otherProduct.length ? "less more" : "see more"}
+          </a>
         </div>
       </div>
 

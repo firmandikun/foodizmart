@@ -100,12 +100,35 @@ p.deskProduk {
 
 /* Detail Store */
 .imgStore {
-  background-color: var(--N0, #ffffff);
-  overflow: hidden;
-  width: 86px;
-  height: 86;
+  width: 160px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.col4Store {
+  background-color: #fff1c6 !important;
+  width: 349px;
+  height: 180px;
+  padding: 20px;
+  color: #6c757d;
+  border-left: 1px dashed;
+}
+.ulasan {
+  font-size: 12px !important;
+  color: #6c757d;
+}
+.listProducts {
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (min-width: 500px) {
+  .card_riview {
+    display: block;
+  }
 }
 
 .alert-time {
@@ -561,10 +584,16 @@ a.selected {
 .modal-footer .btn {
   border-radius: 0px;
 }
-.tab-pane {
+.tab-panes {
   height: 560px;
   overflow-y: auto;
   padding: 10px;
+}
+
+.list_trems {
+  width: 100%;
+  height: 100vh !important;
+  background-image: white;
 }
 
 .slick-dots {
@@ -864,12 +893,10 @@ label {
   border-color: #f52d56;
 }
 .nav-pills-bg {
-  background-color : "white" !important;
-  height : 100%;
-  padding : 10px;
-  border-radius : 10px;
-
-  
+  background-color: "white" !important;
+  height: 100%;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .btn {

@@ -23,6 +23,7 @@
     "react-redux": "^7.2.4",
     "react-scripts": "4.0.3",
     "react-scrollable-pagination": "^1.0.2",
+    "react-share": "^4.4.0",
     "react-slick": "^0.28.1",
     "reactstrap": "^8.9.0",
     "redux": "^4.1.0",

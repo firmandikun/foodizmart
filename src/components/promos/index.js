@@ -4,11 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { CardPromos } from "../../atom/cardPromos";
 
-export const Promos = ({ image }) => {
-  const [imageSlider] = React.useState(
-    JSON.parse(localStorage.getItem("dasboard"))?.support.base_url.slider
-      .original
-  );
+export const Promos = ({ image, slider }) => {
   const settings = {
     infinite: true,
     speed: 500,
@@ -58,11 +54,11 @@ export const Promos = ({ image }) => {
   };
   return (
     <Slider {...settings}>
-      {image
-        ? image.data.lists.map((img, index) => {
+      {slider
+        ? slider.data.lists.map((img, index) => {
             return (
               <div>
-                <CardPromos image={`${imageSlider}${img.path}`} />
+                <CardPromos image={`${image}${img.path}`} />
               </div>
             );
           })

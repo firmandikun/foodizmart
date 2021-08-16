@@ -1,18 +1,18 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
 import Logo from "../../assets/logo.png";
+import { Link } from "react-router-dom";
 
-export const Footer = () => {
+export const HeaderPage = () => {
   return (
-    <footer className=" border-top bg-white px-0">
+    <div>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container ">
-          <Link class="navbar-brand" to="/">
+        <div className="container">
+          <a class="navbar-brand" href="/">
             <img
               className="img-fluid logo-img rounded-pill shadow-sm"
               src={Logo}
             />
-          </Link>
+          </a>
           <button
             class="navbar-toggler"
             type="button"
@@ -26,26 +26,16 @@ export const Footer = () => {
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto ">
-              <a class="nav-link " href="/trems">
-                Syarat dan Ketentuan
+              <a class="nav-link " href="/">
+                Home
               </a>
-              <a class="nav-link" href="#">
-                Kebijakan Privasi
-              </a>
-              <a class="nav-link" href="/contact">
-                Kontak Kami
-              </a>
-
-              <a class="nav-link" href="#">
-                Kemitraan
-              </a>
-              <a class="nav-link" href="/contact_investor">
-                Join Investor
+              <a class="nav-link" href="/about">
+                Tentang Kami
               </a>
             </div>
           </div>
         </div>
       </nav>
-    </footer>
+    </div>
   );
 };

@@ -1,6 +1,11 @@
 import React from "react";
 import Home from "./pages/Home";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useRouteMatch,
+} from "react-router-dom";
 import { ListProducts } from "./pages/ListProducts";
 import DetailStore from "./pages/DetailStore";
 import DetailProduct from "./pages/DetailProduct";
@@ -9,7 +14,9 @@ import { useDispatch } from "react-redux";
 import useGeoLocation from "./components/hooks/useGeoLocation";
 import { fecthDataAddress } from "./features/locations/action";
 import Message from "./pages/Message";
-import Regulation from "./pages/Regulation";
+
+import { PageMessage } from "./pages/PageMessage";
+import Faq from "./pages/Faq";
 
 const Routers = () => {
   const dispatch = useDispatch();
@@ -29,8 +36,9 @@ const Routers = () => {
           <Route path="/detail/:id" exact component={DetailProduct} />
           <Route path="/products" exact component={ListProducts} />
           <Route path="/detailStore/:shop_id" exact component={DetailStore} />
+          <Route path="/pagemessage" exact component={PageMessage} />
           <Route path="/message" exact component={Message} />
-          <Route path="/regulation" exact component={Regulation} />
+          <Route path="/regulation" exact component={Faq} />
         </Switch>
       </Router>
     </div>
