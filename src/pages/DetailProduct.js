@@ -11,7 +11,6 @@ import { useHistory } from "react-router";
 import { Products } from "../atom/products";
 import { convertToIdr } from "../assets/js/convert (1)";
 import share from "../assets/share1.png";
-import { LoadingComponent } from "../atom/loading";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
 import { useRef } from "react";
 import { FacebookShareButton, WhatsappShareButton } from "react-share";
@@ -32,7 +31,6 @@ const DetailProduct = () => {
   const [seacrh, setSeacrh] = React.useState();
   const [isLoading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState(8);
-
 
   const ref = useRef(null);
 
@@ -162,26 +160,26 @@ const DetailProduct = () => {
                       >
                         <img src={share} alt="" width={50} />
                       </button>
-                      <div class="dropdown-menu " style={{ marginRight: 75}}>
-                      <div className="d-flex justify-content-center px-4 py-2"> 
-                      <WhatsappShareButton
-                      url={`${window.location.href}`}
-                      title={"selamat belanja"}
-                      hashtag={"#hashtag"}
-                      description={"aiueo"}
-                      className="dropdown-item"
-                       > 
-                        <WhatsappIcon size={35} round/>
-                      </WhatsappShareButton >
-                        <FacebookShareButton
-                          url={"https://foodizmart.duriansultan.com/"}
-                          quote={"selamat berbelanja"}
-                          description={"aiueo"}
-                          className="Demo__some-network__share-button"
-                        >
-                          <FacebookIcon size={35} round /> 
-                        </FacebookShareButton>
-                      </div>
+                      <div class="dropdown-menu  " style={{ marginRight: 75 }}>
+                        <div className="d-flex justify-content-center px-4 py-2">
+                          <WhatsappShareButton
+                            url={`${window.location.href}`}
+                            title={"selamat belanja"}
+                            hashtag={"#hashtag"}
+                            description={"aiueo"}
+                            className="dropdown-item"
+                          >
+                            <WhatsappIcon size={35} round />
+                          </WhatsappShareButton>
+                          <FacebookShareButton
+                            url={"https://foodizmart.duriansultan.com/"}
+                            quote={"selamat berbelanja"}
+                            description={"aiueo"}
+                            className="Demo__some-network__share-button"
+                          >
+                            <FacebookIcon size={35} round />
+                          </FacebookShareButton>
+                        </div>
                       </div>
                     </div>
                   </div>

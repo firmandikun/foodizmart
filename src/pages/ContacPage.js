@@ -119,19 +119,19 @@ export const ContacPage = () => {
                   </p>
                   <ol>
                     <li>
-                      Kemudahan Proses Marketing Berbagai fitur pada aplikasi
+                     <b> Kemudahan Proses Marketing </b> <br/> Berbagai fitur pada aplikasi
                       diantaranya tampilan toko yang menarik (seperti instagram)
                       dan fitur share toko serta share produk akan memudahkan
                       Anda membagikan informasi kepada pelanggan
                     </li>
                     <li>
-                      Gratis Ongkir Fitur diambil di toko akan menguntungkan
+                      <b> Gratis Ongkir </b> <br/> Fitur diambil di toko akan menguntungkan
                       merchant karena tidak perlu disibukkan melakukan
                       pengantaran, bagi pelanggan pun akan diuntungkan dengan
                       tidak perlu membayar biaya ongkir
                     </li>
                     <li>
-                      Banyak Pilihan Metode Pengiriman Foodizmart menyediakan
+                      <b> Banyak Pilihan Metode Pengiriman</b> <br/> Foodizmart menyediakan
                       jasa pengiriman yang dapat disesuaikan dengan keinginan
                       penjual / pembeli, untuk pengiriman jarak dekat
                       diantaranya Grab Express, Go-Send dan MrSpeedy, sedangkan
@@ -139,7 +139,7 @@ export const ContacPage = () => {
                       J&T, Si Cepat, Cargo, dll
                     </li>
                     <li>
-                      Kemudahan Manajemen Produk Foodizmart menyediakan fitur
+                      <b> Kemudahan Manajemen Produk </b> <br/> Foodizmart menyediakan fitur
                       upload atau edit produk yang dapat dilakukan melalui
                       aplikasi maupun melalui website seller.foodizmart.com
                     </li>

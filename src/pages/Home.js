@@ -45,7 +45,7 @@ const Home = () => {
   const history = useHistory();
 
   const executeScroll = () => {
-    console.log("");
+    return "";
   };
   const getSlider = async () => {
     setLoading(true);

@@ -12,7 +12,6 @@ const statusList = {
   success: "success",
   error: "error",
 };
-
 function reducer(state = initialState, action) {
   switch (action.type) {
     case START_FETCHING_ADRESS:

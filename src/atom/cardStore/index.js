@@ -27,18 +27,22 @@ export const CardStore = ({ name, id, image, address, ratting, distance }) => {
               {name}
             </h6>
             <div className="d-flex ">
-              <p className="text-muted text-left ">
-                {address} <span className="ml-2"> | </span>{" "}
-              </p>
-
-              <div className="ratting d-flex ml-1 ">
-                <div className="ratting ml-2 ">
-                  <p className="text-muted text-left "> {ratting} </p>
-                </div>
-                <div className="image-ratting ml-1">
-                  <img src={icontRattig} alt="" style={{ width: 19 }} />
-                </div>
+              <div>
+                {ratting > 0 ? (
+                  <div className="ratting d-flex ml-1">
+                    <div className="image-ratting ml-1">
+                      <img src={icontRattig} alt="" style={{ width: 18 }} />
+                    </div>
+                    <div className="ratting ml-2 mt-1 ">
+                      <p className="text-muted text-left "> {ratting} </p>
+                    </div>
+                    <span className="mx-2 mt-1 "> | </span>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
+              <p className="text-muted mt-1"> {address} </p>
             </div>
           </div>
         </div>

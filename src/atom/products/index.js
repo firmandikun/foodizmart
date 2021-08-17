@@ -43,7 +43,7 @@ export const Products = ({
                     {nameProduct}
                   </h6>
 
-                  <p className="text-muted "> {nameStore} </p>
+                  <p className="text-muted  "> {nameStore} </p>
                   <div className="d-flex align-items-center">
                     <h6 className="price m-0 text-success">
                       {convertToIdr(price, "Rp")}
@@ -64,15 +64,15 @@ export const Products = ({
                         ) : (
                           ""
                         )}
-                        <div className="mx-1">
+                        <div className="mx-1 mt-1">
                           {" "}
                           {ratting > 0 ? ratting : ""}
                         </div>
                       </div>
                     </span>
 
-                    <div className="mt-1 ml-2">
-                      {qty > 0 ? "Terjual : " + qty : ""}{" "}
+                    <div className="mt-2 ">
+                      {qty > 0 ? `| Terjual : ` + qty : ""}{" "}
                     </div>
                   </div>
                   <div className="text-left mt-1">

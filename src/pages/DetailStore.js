@@ -41,7 +41,7 @@ const DetailStore = (props) => {
   const scrollProduct = useRef(null);
 
   const scrollToTop = () => {
-    console.log("");
+    return "";
   };
   // const state = useSelector((state) => state.address);
   const urlImage = "https://foodi.otiza.com/asset/image/shop/original/";
