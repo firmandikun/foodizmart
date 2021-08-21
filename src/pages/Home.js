@@ -11,7 +11,9 @@ import { CardStore } from "../atom/cardStore";
 import {
   LoadingCardStore,
   LoadingCategory,
+  LoadingCategorysm,
   LoadingComponent,
+  LoadingComponentsm,
   LoadingInformation,
 } from "../atom/loading";
 import { useHistory, withRouter } from "react-router";
@@ -296,7 +298,11 @@ const Home = () => {
         <Slider {...settings}>
           {isLoading &&
             [...Array(6)].map(() => {
-              return <LoadingCategory />;
+              return window.innerWidth < 500 ? (
+                <LoadingCategorysm />
+              ) : (
+                <LoadingCategory />
+              );
             })}
           {category.map((categ, index) => {
             return (
@@ -328,14 +334,18 @@ const Home = () => {
       <div className="container ">
         <Promos image={`${sliderImage}`} slider={slider} />
       </div>
-      <div className="container list-product">
+      <div className="container list-product" style={{ overflow: "hidden" }}>
         <div className="title d-flex align-items-center py-3">
           <h5 className="m-0">Produk</h5>
         </div>
-        <div className="row">
+        <div className="row row_products">
           {isLoading &&
             [...Array(8)].map(() => {
-              return <LoadingComponent />;
+              return window.innerWidth < 500 ? (
+                <LoadingComponentsm />
+              ) : (
+                <LoadingComponent />
+              );
             })}
           {product.slice(0, seeAllProduct).map((product, index) => {
             return (

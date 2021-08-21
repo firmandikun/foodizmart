@@ -20,6 +20,26 @@ export const LoadingComponent = () => {
   );
 };
 
+export const LoadingComponentsm = () => {
+  return (
+    <div>
+      <div className="d-flex flex-column px-2">
+        <Skeleton count={1} width={380} height={280} />
+        <Skeleton count={1} width={380} height={10} />
+        <Skeleton count={1} width={380} height={10} />
+      </div>
+      <div className="d-flex justify-content-between mt-3 ">
+        <div className="pl-2">
+          <Skeleton count={1} width={80} height={10} />{" "}
+        </div>
+        <div className="pr-1">
+          <Skeleton count={1} width={80} height={10} color="blue" />{" "}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const LoadingStore = () => {
   return (
     <div>
@@ -43,6 +63,16 @@ export const LoadingCategory = () => {
     <div>
       <div className="d-flex flex-column px-2  ">
         <Skeleton count={1} width={180} height={100} className="rounded-3 " />
+      </div>
+    </div>
+  );
+};
+
+export const LoadingCategorysm = () => {
+  return (
+    <div>
+      <div className="d-flex flex-column px-2  ">
+        <Skeleton count={1} width={80} height={100} className="rounded-3 " />
       </div>
     </div>
   );

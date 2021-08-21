@@ -188,7 +188,6 @@ const DetailProduct = (props) => {
                     </div>
                   </div>
                 </div>
-
                 <div className="d-flex mt-3 ml-2">
                   <div className="rattings ">
                     <h5 className=" rattings ">{detail.rating_star} rating</h5>
