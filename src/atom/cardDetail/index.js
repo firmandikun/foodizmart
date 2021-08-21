@@ -6,8 +6,10 @@ import { useHistory } from "react-router-dom";
 
 export const CardDetail = (data) => {
   const [imageProduct] = React.useState(
-    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product
-      .original
+    localStorage.getItem("dasboard")
+      ? JSON.parse(localStorage.getItem("dasboard")).support.base_url.product
+          .original
+      : null
   );
 
   const history = useHistory();

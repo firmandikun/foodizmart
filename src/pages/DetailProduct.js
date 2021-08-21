@@ -10,13 +10,14 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Products } from "../atom/products";
 import { convertToIdr } from "../assets/js/convert (1)";
-import share from "../assets/share1.png";
+import share from "../assets/icontShare.jpeg";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
 import { useRef } from "react";
 import { FacebookShareButton, WhatsappShareButton } from "react-share";
 import { FacebookIcon, WhatsappIcon } from "react-share";
 
-const DetailProduct = () => {
+const DetailProduct = (props) => {
+  // console.log(props);
   const { id } = useParams();
   const [detail, setDetail] = React.useState({});
   const [otherProduct, setOtherProducts] = React.useState([]);
@@ -25,8 +26,10 @@ const DetailProduct = () => {
   const [keywordSearch] = React.useState("Cari Produk Pilihanmu");
   const [harga, setHarga] = React.useState();
   const [imageProduct] = React.useState(
-    JSON.parse(localStorage.getItem("dasboard")).support.base_url.product
-      .original
+    localStorage.getItem("dasboard")
+      ? JSON.parse(localStorage.getItem("dasboard")).support.base_url.product
+          .original
+      : null
   );
   const [seacrh, setSeacrh] = React.useState();
   const [isLoading, setLoading] = React.useState(true);
@@ -37,6 +40,8 @@ const DetailProduct = () => {
   const executeScroll = () => {
     ref.current.scrollIntoView({ block: "end", behavior: "smooth" });
   };
+
+  var shareUrl = `https://foodizmart.duriansultan.com/${props.location.pathname}`;
 
   const history = useHistory();
   const authBasic =
@@ -96,7 +101,6 @@ const DetailProduct = () => {
           },
         }
       );
-
       if (response.data.status === "success") {
         setSimilarProducts(response.data.data.product_result);
         setLoading(false);
@@ -140,14 +144,17 @@ const DetailProduct = () => {
           <div className="col-lg-6 col-12 p-0">
             <CardDetail data={detail} />
           </div>
-          <div className="col-lg-6 col-12 ">
+          <div className="col-lg-6 col-12 " style={{ overflow: "hidden" }}>
             <div className="p-4 bg-white rounded shadow-sm">
               <div className="mt-2 ">
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    <h1 className=" nameDetailProduct text-left ml-2 ">
+                    <h2
+                      className=" nameDetailProduct text-left mt-2 ml-2  "
+                      style={{ lineHeight: 1, color: "#333333" }}
+                    >
                       {detail.name}
-                    </h1>
+                    </h2>
                   </div>
                   <div>
                     <div class="btn-group ">
@@ -160,22 +167,19 @@ const DetailProduct = () => {
                       >
                         <img src={share} alt="" width={50} />
                       </button>
-                      <div class="dropdown-menu  " style={{ marginRight: 75 }}>
-                        <div className="d-flex justify-content-center px-4 py-2">
+                      <div class="dropdown-menu  " style={{ marginRight: 78 }}>
+                        <div className="d-flex justify-content-center px-4">
                           <WhatsappShareButton
                             url={`${window.location.href}`}
-                            title={"selamat belanja"}
+                            title={`Beli ${detail.name} di ${detail.shop_name} dengan harga Rp ${detail.price} di `}
                             hashtag={"#hashtag"}
-                            description={"aiueo"}
                             className="dropdown-item"
                           >
                             <WhatsappIcon size={35} round />
                           </WhatsappShareButton>
                           <FacebookShareButton
-                            url={"https://foodizmart.duriansultan.com/"}
-                            quote={"selamat berbelanja"}
-                            description={"aiueo"}
-                            className="Demo__some-network__share-button"
+                            url={shareUrl}
+                            quote={`Beli ${detail.name} di ${detail.shop_name} dengan harga Rp ${detail.price} di`}
                           >
                             <FacebookIcon size={35} round />
                           </FacebookShareButton>
@@ -186,79 +190,86 @@ const DetailProduct = () => {
                 </div>
 
                 <div className="d-flex mt-3 ml-2">
-                  <div className="ratting ">
-                    <h5 className="font-weight-700">
-                      {detail.rating_star} ratting
-                    </h5>
+                  <div className="rattings ">
+                    <h5 className=" rattings ">{detail.rating_star} rating</h5>
                   </div>
                   <div className="ratting ml-2">
-                    <h5 className="font-weight-700">| {detail.stock} stock</h5>
+                    <h5 className="rattings ">| {detail.stock} stock</h5>
                   </div>
                   <div className="ratting ml-2">
-                    <h5 className="font-weight-700">| {detail.product_type}</h5>
+                    <h5 className=" rattings">| {detail.product_type}</h5>
                   </div>
                 </div>
 
-                <p className=" deskProduk font-weight-light text-dark text-left  ml-2">
-                  <div className="mx-0 mt-2">
-                    nama toko
-                    <b
-                      className="h6 text-product text-dark "
-                      style={{ marginLeft: 63 }}
-                    >
-                      {detail.shop_name}
-                    </b>
-                  </div>
-                  <div className="mx-0 mt-2">
-                    Harga
-                    <b
-                      className="h6 text-product  text-dark  "
-                      style={{ marginLeft: 100 }}
-                    >
-                      {convertToIdr(harga, "Rp.")}
-                    </b>
-                  </div>
-                  <div className="mx-0 mt-2">
-                    status
-                    <b
-                      className="h6 text-product text-dark "
-                      style={{ marginLeft: 100 }}
-                    >
-                      {detail.status_active}
-                    </b>
-                  </div>
-
-                  <div className="mx-0 mt-2">
-                    Informasi
-                    <b
-                      className="h6 text-product text-dark "
-                      style={{ marginLeft: 78 }}
-                    >
-                      {detail.product_type}
-                    </b>
-                  </div>
-                  <div className="mx-0 mt-2">
-                    Kota
-                    <b
-                      className="h6 text-product text-dark "
-                      style={{ marginLeft: 110 }}
-                    >
-                      {detail.delivery_area}
-                    </b>
-                  </div>
-
-                  <div className=" d-flex align-items-center my-2 ">
-                    Stock
-                    <div class="input-group" style={{ marginLeft: 102 }}>
-                      {detail.stock}
+                <div className="d-flex  align-items-center mt-2">
+                  <div className=" ml-2 ">
+                    <div className="d-flex flex-column ">
+                      <div>
+                        <h6 style={{ color: "#333333" }}>Nama Toko</h6>
+                      </div>
+                      <div className=" mr-auto">
+                        <h6 style={{ color: "#333333" }}>Harga</h6>
+                      </div>
+                      <div className=" mr-auto">
+                        <h6 style={{ color: "#333333" }}>Status</h6>
+                      </div>
+                      <div className=" mr-auto">
+                        <h6 style={{ color: "#333333" }}>Informasi</h6>
+                      </div>
+                      <div className=" mr-auto">
+                        <h6 style={{ color: "#333333" }}>Kota</h6>
+                      </div>
+                      <div className=" mr-auto">
+                        <h6 style={{ color: "#333333" }}>Stok</h6>
+                      </div>
                     </div>
                   </div>
-                </p>
+                  <div className="ml-2">
+                    <div className="d-flex flex-column ml-4">
+                      <div>
+                        <h6 className="font-weight-light">
+                          {detail.shop_name}
+                        </h6>
+                      </div>
+                      <div className="mr-auto">
+                        <h6 className="font-weight-light ">
+                          {convertToIdr(harga, "Rp.")}
+                        </h6>
+                      </div>
+                      <div className=" mr-auto">
+                        <h6 className="font-weight-light">
+                          {detail.status_active}
+                        </h6>
+                      </div>
+                      <div className=" mr-auto">
+                        <h6 className="font-weight-light">
+                          {detail.product_type}
+                        </h6>
+                      </div>
+                      <div className="mr-auto">
+                        <h6 className="font-weight-light ">
+                          {detail.delivery_area}
+                        </h6>
+                      </div>
+                      <div className=" mr-auto">
+                        <h6 className="font-weight-light"> {detail.stock}</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="details">
                 <div className=" ">
-                  <p className="font-weight-bold mb-2">Product Details</p>
-                  <p className="text-muted small ml-2 text-justify mb-0">
+                  <h6
+                    className="mb-2"
+                    style={{ color: "#333333", fontWeight: "bold" }}
+                  >
+                    Product Details
+                  </h6>
+                  <p
+                    className="  ml-2 text-justify mb-0"
+                    style={{ color: "#333333" }}
+                  >
                     {detail.description}
                   </p>
                 </div>

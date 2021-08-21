@@ -68,10 +68,17 @@ const Home = () => {
 
   const currentLocations = async (state) => {
     var bodyFormdata = new FormData();
-    bodyFormdata.append("google[kelurahan][name]", state.data.kelurahan);
-    bodyFormdata.append("google[kecamatan][name]", state.data.kecamatan);
-    bodyFormdata.append("google[kabupaten][name]", state.data.kabupaten);
-    bodyFormdata.append("google[provinsi][name]", state.data.provinsi);
+    if (state === null) {
+      bodyFormdata.append("google[kelurahan][name]", "condong catur");
+      bodyFormdata.append("google[kecamatan][name]", "depok");
+      bodyFormdata.append("google[kabupaten][name]", "sleman");
+      bodyFormdata.append("google[provinsi][name]", "yogyakarta");
+    } else {
+      bodyFormdata.append("google[kelurahan][name]", state.data.kelurahan);
+      bodyFormdata.append("google[kecamatan][name]", state.data.kecamatan);
+      bodyFormdata.append("google[kabupaten][name]", state.data.kabupaten);
+      bodyFormdata.append("google[provinsi][name]", state.data.provinsi);
+    }
     try {
       const response = await axios.post(
         "https://foodi.otiza.com/apiv1/regional/get-current-location",
@@ -178,18 +185,46 @@ const Home = () => {
   const settings = {
     className: "center",
     infinite: true,
-    centerPadding: "80px",
+    centerPadding: "180px",
     slidesToShow: 6,
     swipeToSlide: true,
     responsive: [
       {
-        breakpoint: 480,
+        breakpoint: 500,
         settings: {
           className: "center",
           centerMode: true,
           infinite: true,
-          centerPadding: "80px",
-          slidesToShow: 1,
+          centerPadding: "70px",
+          slidesToShow: 4,
+          autoplay: true,
+          slidesToScroll: 1,
+          arrows: false,
+        },
+      },
+
+      {
+        breakpoint: 700,
+        settings: {
+          className: "center",
+          centerMode: true,
+          infinite: true,
+          centerPadding: "100px",
+          slidesToShow: 4,
+          autoplay: true,
+          slidesToScroll: 1,
+          arrows: false,
+        },
+      },
+
+      {
+        breakpoint: 600,
+        settings: {
+          className: "center",
+          centerMode: true,
+          infinite: true,
+          centerPadding: "0px",
+          slidesToShow: 5,
           autoplay: true,
           slidesToScroll: 1,
           arrows: false,
@@ -203,7 +238,7 @@ const Home = () => {
           centerMode: true,
           infinite: true,
           centerPadding: "100px",
-          slidesToShow: 6,
+          slidesToShow: 5,
           autoplay: true,
           slidesToScroll: 1,
         },
@@ -214,7 +249,7 @@ const Home = () => {
           className: "center",
           centerMode: true,
           infinite: true,
-          centerPadding: "110px",
+          centerPadding: "75px",
           slidesToShow: 4,
           autoplay: true,
           slidesToScroll: 1,
@@ -222,26 +257,13 @@ const Home = () => {
         },
       },
       {
-        breakpoint: 800,
+        breakpoint: 420,
         settings: {
           className: "center",
           centerMode: true,
           infinite: true,
-          centerPadding: "110px",
-          slidesToShow: 2,
-          autoplay: true,
-          slidesToScroll: 1,
-          arrows: false,
-        },
-      },
-      {
-        breakpoint: 650,
-        settings: {
-          className: "center",
-          centerMode: true,
-          infinite: true,
-          centerPadding: "170px",
-          slidesToShow: 1,
+          centerPadding: "60px",
+          slidesToShow: 3,
           autoplay: true,
           slidesToScroll: 1,
           arrows: false,
@@ -265,10 +287,12 @@ const Home = () => {
         handleSubmit={handleSubmit}
         search={keywordSearch}
       />
-      <div className="container p-0">
+      <div className="container ">
         <div className="text-left  py-3">
           <h5 className="m-0">Kategori</h5>
         </div>
+      </div>
+      <div className="container">
         <Slider {...settings}>
           {isLoading &&
             [...Array(6)].map(() => {
@@ -293,14 +317,18 @@ const Home = () => {
         </Slider>
       </div>
       <div>
-        <div className="container p-0 ">
-          <div className="py-3 osahan-promos">
-            <h5 className="text-left m-0">Informasi</h5>
+        <div className="container">
+          <div className="col-12 px-0">
+            <div className="py-3 osahan-promos">
+              <h5 className="text-left m-0">Informasi</h5>
+            </div>
           </div>
-          <Promos image={`${sliderImage}`} slider={slider} />
         </div>
       </div>
-      <div className="container p-0 list-product">
+      <div className="container ">
+        <Promos image={`${sliderImage}`} slider={slider} />
+      </div>
+      <div className="container list-product">
         <div className="title d-flex align-items-center py-3">
           <h5 className="m-0">Produk</h5>
         </div>
@@ -345,7 +373,7 @@ const Home = () => {
           </button>
         </div>
       </div>
-      <div className="container p-0">
+      <div className="container ">
         <div className="row">
           <div className="col-12">
             <div className="title d-flex align-items-center py-3">

@@ -49,11 +49,11 @@ export const Products = ({
                       {convertToIdr(price, "Rp")}
                     </h6>
                   </div>
-                  <div className="d-flex align-items-center justify-content-start">
+                  <div className="d-flex align-items-center justify-content-start m-0 p-0">
                     <span className=" mt-1 ">
-                      <div className="d-flex align-items-center justify-content-between ">
+                      <div className="d-flex align-items-center justify-content-start m-0 p-0 ">
                         {ratting > 0 ? (
-                          <div className="">
+                          <div>
                             <img
                               className=""
                               src={icontRattig}
@@ -64,15 +64,29 @@ export const Products = ({
                         ) : (
                           ""
                         )}
-                        <div className="mx-1 mt-1">
-                          {" "}
-                          {ratting > 0 ? ratting : ""}
+                        <div className="mt-1">
+                          {ratting > 0 ? (
+                            <div>
+                              <span className="ml-1">{ratting}</span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                        <div className="mt-1">
+                          {ratting > 0 ? (
+                            <div>
+                              <span className="mx-2"> | </span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
                         </div>
                       </div>
                     </span>
 
-                    <div className="mt-2 ">
-                      {qty > 0 ? `| Terjual : ` + qty : ""}{" "}
+                    <div className="mt-2">
+                      {qty > 0 ? `Terjual : ` + qty : ""}{" "}
                     </div>
                   </div>
                   <div className="text-left mt-1">

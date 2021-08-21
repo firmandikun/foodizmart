@@ -86,6 +86,13 @@ p.deskProduk {
   font-size: 16px;
 }
 
+/* message */
+.pageMessage {
+  height: fit-content;
+}
+
+/* conten_pesan */
+
 .schedule .nav-link.active:after,
 .schedule .nav-link:focus:after,
 .schedule .nav-link:hover:after {
@@ -196,6 +203,41 @@ p.deskProduk {
   transition-delay: 0s;
 }
 /* end page message */
+@media only screen and (max-width: 400px) {
+  img.playstore {
+    width: 180px !important;
+  }
+}
+@media only screen and (max-width: 400px) {
+  img.appStore {
+    width: 150px !important;
+    height: 46px !important;
+  }
+}
+
+/* product detail */
+
+@media only screen and (max-width: 440px) {
+  h2.nameDetailProduct {
+    font-size: 29px !important;
+    font-weight: 500;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+}
+
+h5.rattings {
+  font-weight: bold;
+  color: #333333;
+}
+
+@media only screen and (max-width: 390px) {
+  h5.rattings {
+    font-size: 15px;
+    text-align: left;
+    font-weight: bold;
+  }
+}
 
 /* Header */
 .osahan-location-drop .small {

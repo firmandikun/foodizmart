@@ -4,9 +4,9 @@ export const LoadingComponent = () => {
   return (
     <div>
       <div className="d-flex flex-column px-2">
-        <Skeleton count={1} width={270} height={300} />
-        <Skeleton count={1} width={270} height={10} />
-        <Skeleton count={1} width={270} height={10} />
+        <Skeleton count={1} width={260} height={280} />
+        <Skeleton count={1} width={260} height={10} />
+        <Skeleton count={1} width={260} height={10} />
       </div>
       <div className="d-flex justify-content-between mt-3 ">
         <div className="pl-2">

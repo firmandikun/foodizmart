@@ -176,14 +176,14 @@ export const ListProducts = (props) => {
         search={keywordSearch}
       />
       <Breadcrumb name="List Produk" />
-      <div className="container p-0 list-product">
+      <div className="container  list-product">
         <div className="title d-flex align-items-center py-3">
           <h4 className="m-0">Pick's Today</h4>
           <div className="m-0 text-center ml-auto">
             <button
               href=""
               onClick={toggleDrawer(true)}
-              className="btn text-muted   bg-white mr-2"
+              className="btn text-muted   bg-white mr-3"
             >
               <img
                 src={icontFillter}

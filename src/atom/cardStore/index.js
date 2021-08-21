@@ -29,8 +29,8 @@ export const CardStore = ({ name, id, image, address, ratting, distance }) => {
             <div className="d-flex ">
               <div>
                 {ratting > 0 ? (
-                  <div className="ratting d-flex ml-1">
-                    <div className="image-ratting ml-1">
+                  <div className="ratting d-flex">
+                    <div className="image-ratting mt-1 ">
                       <img src={icontRattig} alt="" style={{ width: 18 }} />
                     </div>
                     <div className="ratting ml-2 mt-1 ">

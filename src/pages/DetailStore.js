@@ -216,7 +216,7 @@ const DetailStore = (props) => {
                   {detailStore.phone}{" "}
                 </p>
               </div>
-              <p className="text-muted small text-justify mb-0">
+              <p className="text-muted small text-justify mb-2">
                 {detailStore.description}
               </p>
             </div>
@@ -351,7 +351,7 @@ const DetailStore = (props) => {
       <div className="container mt-4">
         <div className="row">
           <div className="title d-flex align-items-center py-4">
-            <h5 className="m-1">Jumlah Rivie {`(${totalRiview})`} </h5>
+            <h5 className="m-1">Jumlah Riview {`(${totalRiview})`} </h5>
           </div>
         </div>
 
