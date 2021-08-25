@@ -3,7 +3,6 @@ import { CardDetail } from "../atom/cardDetail";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { Footer } from "../components/footer";
 import { Header } from "../components/header";
-import { Otherproducts } from "../components/otherproducts";
 import { useParams, withRouter } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -11,13 +10,34 @@ import { useHistory } from "react-router";
 import { Products } from "../atom/products";
 import { convertToIdr } from "../assets/js/convert (1)";
 import share from "../assets/icontShare.jpeg";
+import close from "../assets/close.png";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
 import { useRef } from "react";
 import { FacebookShareButton, WhatsappShareButton } from "react-share";
 import { FacebookIcon, WhatsappIcon } from "react-share";
+import { LoadingComponent, LoadingComponentsm } from "../atom/loading";
+import startCase from "lodash.startcase";
+import { makeStyles } from "@material-ui/core/styles";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "none",
+    borderRadius: 10,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
 const DetailProduct = (props) => {
-  // console.log(props);
   const { id } = useParams();
   const [detail, setDetail] = React.useState({});
   const [otherProduct, setOtherProducts] = React.useState([]);
@@ -34,6 +54,8 @@ const DetailProduct = (props) => {
   const [seacrh, setSeacrh] = React.useState();
   const [isLoading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState(8);
+  const [seller, setSeler] = React.useState();
+  // console.log(seller);
 
   const ref = useRef(null);
 
@@ -41,7 +63,16 @@ const DetailProduct = (props) => {
     ref.current.scrollIntoView({ block: "end", behavior: "smooth" });
   };
 
-  var shareUrl = `https://foodizmart.duriansultan.com/${props.location.pathname}`;
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const history = useHistory();
   const authBasic =
@@ -77,6 +108,7 @@ const DetailProduct = (props) => {
             return val;
           });
           setDetail(res.data.data.product);
+          setSeler(res.data.data.product.shipment_by_seller);
           setOtherProducts(res.data.data.other_product);
           setHarga(res.data.data.product.price);
           setLoading(false);
@@ -138,10 +170,10 @@ const DetailProduct = (props) => {
           }
         />
       </div>
-      <Breadcrumb name="Produk detail" />
+      <Breadcrumb name="Produk Detil" />
       <div className="container mt-4 ">
         <div className="row">
-          <div className="col-lg-6 col-12 p-0">
+          <div className="col-lg-6 col-12">
             <CardDetail data={detail} />
           </div>
           <div className="col-lg-6 col-12 " style={{ overflow: "hidden" }}>
@@ -157,117 +189,168 @@ const DetailProduct = (props) => {
                     </h2>
                   </div>
                   <div>
-                    <div class="btn-group ">
-                      <button
-                        type="button"
-                        className="btn "
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                      >
-                        <img src={share} alt="" width={50} />
-                      </button>
-                      <div class="dropdown-menu  " style={{ marginRight: 78 }}>
-                        <div className="d-flex justify-content-center px-4">
-                          <WhatsappShareButton
-                            url={`${window.location.href}`}
-                            title={`Beli ${detail.name} di ${detail.shop_name} dengan harga Rp ${detail.price} di `}
-                            hashtag={"#hashtag"}
-                            className="dropdown-item"
-                          >
-                            <WhatsappIcon size={35} round />
-                          </WhatsappShareButton>
-                          <FacebookShareButton
-                            url={shareUrl}
-                            quote={`Beli ${detail.name} di ${detail.shop_name} dengan harga Rp ${detail.price} di`}
-                          >
-                            <FacebookIcon size={35} round />
-                          </FacebookShareButton>
+                    <button type="button" className="btn" onClick={handleOpen}>
+                      <img src={share} alt="" width={50} />
+                    </button>
+                    <Modal
+                      aria-labelledby="transition-modal-title"
+                      aria-describedby="transition-modal-description"
+                      className={classes.modal}
+                      open={open}
+                      onClose={handleClose}
+                      closeAfterTransition
+                      BackdropComponent={Backdrop}
+                      BackdropProps={{
+                        timeout: 500,
+                      }}
+                    >
+                      <Fade in={open}>
+                        <div className={classes.paper}>
+                          <div className="d-flex justify-content-center mb-2">
+                            <div className=""></div>
+                            <div className="">
+                              <a
+                                className="btn font-weight-bold "
+                                onClick={handleClose}
+                              >
+                                <img src={close} alt="" width={40} />
+                              </a>
+                            </div>
+                          </div>
+                          <div className="mb-2">
+                            <h3 style={{ fontWeight: 400, fontSize: 16 }}>
+                              Bagikan Produk ini
+                            </h3>
+                          </div>
+                          <div className="d-flex justify-content-center ">
+                            <div className=" mx-2 ">
+                              <WhatsappShareButton
+                                url={`\n${window.location.href}`}
+                                title={`Beli ${detail.name} di${
+                                  detail.shop_name
+                                } dengan harga Rp ${convertToIdr(
+                                  harga,
+                                  "Rp."
+                                )}, \ndi FOODIZMART!`}
+                                className="dropdown-item"
+                              >
+                                <WhatsappIcon size={35} round />
+                              </WhatsappShareButton>
+                            </div>
+                            <FacebookShareButton
+                              url={("Cek Link ", window.location.href)}
+                              quote={`Beli ${detail.name} di ${detail.shop_name}
+                                dengan harga Rp ${convertToIdr(harga, "Rp.")}, -
+                                di FOODIZMART!`}
+                            >
+                              <FacebookIcon size={35} round />
+                            </FacebookShareButton>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      </Fade>
+                    </Modal>
                   </div>
                 </div>
-                <div className="d-flex mt-3 ml-2">
+                <div className="d-flex mt-1 ml-2">
                   <div className="rattings ">
-                    <h5 className=" rattings ">{detail.rating_star} rating</h5>
+                    <h5 className=" rattings " style={{ fontWeight: 600 }}>
+                      {detail.rating_star} rating
+                    </h5>
                   </div>
                   <div className="ratting ml-2">
-                    <h5 className="rattings ">| {detail.stock} stock</h5>
+                    <h5 className="rattings " style={{ fontWeight: 600 }}>
+                      | {detail.stock} stok
+                    </h5>
                   </div>
                   <div className="ratting ml-2">
-                    <h5 className=" rattings">| {detail.product_type}</h5>
+                    <h5 className=" rattings" style={{ fontWeight: 600 }}>
+                      | {detail.product_type}
+                    </h5>
                   </div>
                 </div>
 
-                <div className="d-flex  align-items-center mt-2">
-                  <div className=" ml-2 ">
-                    <div className="d-flex flex-column ">
-                      <div>
-                        <h6 style={{ color: "#333333" }}>Nama Toko</h6>
-                      </div>
-                      <div className=" mr-auto">
-                        <h6 style={{ color: "#333333" }}>Harga</h6>
-                      </div>
-                      <div className=" mr-auto">
-                        <h6 style={{ color: "#333333" }}>Status</h6>
-                      </div>
-                      <div className=" mr-auto">
-                        <h6 style={{ color: "#333333" }}>Informasi</h6>
-                      </div>
-                      <div className=" mr-auto">
-                        <h6 style={{ color: "#333333" }}>Kota</h6>
-                      </div>
-                      <div className=" mr-auto">
-                        <h6 style={{ color: "#333333" }}>Stok</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="ml-2">
-                    <div className="d-flex flex-column ml-4">
-                      <div>
-                        <h6 className="font-weight-light">
-                          {detail.shop_name}
-                        </h6>
-                      </div>
-                      <div className="mr-auto">
-                        <h6 className="font-weight-light ">
-                          {convertToIdr(harga, "Rp.")}
-                        </h6>
-                      </div>
-                      <div className=" mr-auto">
-                        <h6 className="font-weight-light">
-                          {detail.status_active}
-                        </h6>
-                      </div>
-                      <div className=" mr-auto">
-                        <h6 className="font-weight-light">
-                          {detail.product_type}
-                        </h6>
-                      </div>
-                      <div className="mr-auto">
-                        <h6 className="font-weight-light ">
-                          {detail.delivery_area}
-                        </h6>
-                      </div>
-                      <div className=" mr-auto">
-                        <h6 className="font-weight-light"> {detail.stock}</h6>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <table className="table text-left table-borderless  ">
+                  <tbody style={{ color: "#333333" }}>
+                    <tr>
+                      <td className="pb-2 contenRatting ">Nama Toko</td>
+                      <td
+                        className=" pb-2 contenRatting"
+                        style={{ fontWeight: 500, fontSize: 16 }}
+                      >
+                        {detail.shop_name}{" "}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        className=" pt-0 pb-2 contenRatting"
+                        // style={{ fontWeight: 600, fontSize: 16 }}
+                      >
+                        Harga
+                      </td>
+                      <td
+                        className=" pt-0 pb-2 contenRatting"
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        {convertToIdr(harga, "Rp.")}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className=" pt-0 pb-2 contenRatting">Kelurahan</td>
+                      <td
+                        className=" pt-0 pb-2 d-flex contenRatting"
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        {`${detail.shop_regional_kelurahan_name}, `}
+                        {detail.shop_regional_kabupaten_name}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className=" pt-0 pb-2 contenRatting ">Informasi</td>
+                      <td
+                        className=" pt-0 pb-2 contenRatting "
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        {startCase(detail.product_type)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className=" pt-0 pb-2 contenRatting">Stok</td>
+                      <td
+                        className=" pt-0 pb-2 contenRatting "
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        {detail.stock}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className=" pt-0 pb-2 contenRatting">
+                        {detail.shipment_by_seller === "true"
+                          ? `Gratis Ongkir`
+                          : ""}
+                      </td>
+                      <td
+                        className=" pt-0 pb-2 contenRatting"
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        {detail.shipment_by_seller === "true"
+                          ? `Radius ${detail.shipment_by_seller_maximum_radius} KM`
+                          : ""}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <div className="details">
                 <div className=" ">
                   <h6
-                    className="mb-2"
-                    style={{ color: "#333333", fontWeight: "bold" }}
+                    className="mb-2 detail"
+                    style={{ color: "#333333", fontWeight: 600 }}
                   >
-                    Product Details
+                    Produk Detil
                   </h6>
                   <p
-                    className="  ml-2 text-justify mb-0"
-                    style={{ color: "#333333" }}
+                    className="  ml-2 text-justify mb-0 deskripsi"
+                    style={{ fontWeight: 500, fontSize: 12, color: "#333333" }}
                   >
                     {detail.description}
                   </p>
@@ -280,16 +363,26 @@ const DetailProduct = (props) => {
 
       <div className="container list-product">
         <div class="title  py-3">
-          <h5 class="m-0 text-left"> Product Serupa </h5>
+          <h5 className="text-left m-0 titleHome" style={{ fontWeight: 600 }}>
+            Produk Serupa{" "}
+          </h5>
         </div>
         <div className="row">
+          {isLoading &&
+            [...Array(8)].map(() => {
+              return window.innerWidth < 500 ? (
+                <LoadingComponentsm />
+              ) : (
+                <LoadingComponent />
+              );
+            })}
           {similarProducts.slice(0, page).map((item) => {
             return (
               <Products
                 price={item.price}
                 image={`${imageProduct}${item.photo}`}
                 nameStore={item.shop_name}
-                location={item.shop_address}
+                location={`${item.shop_regional_kelurahan_name}, ${item.shop_regional_kabupaten_name}`}
                 nameProduct={item.name}
                 qty={item.qty_order}
                 ratting={item.rating_star}
@@ -312,20 +405,30 @@ const DetailProduct = (props) => {
                 : setPage(similarProducts.length)
             }
           >
-            {page === similarProducts.length ? "less more" : "see more"}
+            {page === similarProducts.length ? "Lebih Sedikit" : "Selengkapnya"}
           </a>
         </div>
         <div class="title py-3">
-          <h5 class="m-0 text-left"> Produk Lainyaa </h5>
+          <h5 className="text-left m-0 titleHome" style={{ fontWeight: 600 }}>
+            Produk Lainya
+          </h5>
         </div>
         <div className="row">
+          {isLoading &&
+            [...Array(8)].map(() => {
+              return window.innerWidth < 500 ? (
+                <LoadingComponentsm />
+              ) : (
+                <LoadingComponent />
+              );
+            })}
           {otherProduct.slice(0, page).map((item) => {
             return (
               <Products
                 price={item.price}
                 image={`${imageProduct}${item.photo}`}
                 nameStore={item.shop_name}
-                location={item.shop_address}
+                location={`${item.shop_regional_kelurahan_name}, ${item.shop_regional_kabupaten_name}`}
                 nameProduct={item.name}
                 qty={item.qty_order}
                 ratting={item.rating_star}
@@ -348,7 +451,7 @@ const DetailProduct = (props) => {
                 : setPage(otherProduct.length)
             }
           >
-            {page === otherProduct.length ? "less more" : "see more"}
+            {page === otherProduct.length ? "Lebih Sedikit" : "Selengkapnya"}
           </a>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { convertToIdr } from "../../assets/js/convert (1)";
 import icontRattig from "../../assets/rating.png";
 import { Link } from "react-router-dom";
+import "./product.css";
 
 export const Products = ({
   image,
@@ -39,11 +40,14 @@ export const Products = ({
                       <span className="badge  status mx-3">{status}</span>
                     </div>
                   </div>
-                  <h6 className="mb-0 mt-2" style={{ cursor: "pointer" }}>
+                  <h6
+                    className="mb-0 mt-2 nameP"
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                  >
                     {nameProduct}
                   </h6>
 
-                  <p className="text-muted  "> {nameStore} </p>
+                  <p className="text-muted nameS">{nameStore}</p>
                   <div className="d-flex align-items-center">
                     <h6 className="price m-0 text-success">
                       {convertToIdr(price, "Rp")}
@@ -55,7 +59,7 @@ export const Products = ({
                         {ratting > 0 ? (
                           <div>
                             <img
-                              className=""
+                              className="icone_ratting"
                               src={icontRattig}
                               alt=""
                               style={{ width: 15 }}
@@ -64,10 +68,10 @@ export const Products = ({
                         ) : (
                           ""
                         )}
-                        <div className="mt-1">
+                        <div className="mt-1" style={{ fontWeight: 500 }}>
                           {ratting > 0 ? (
                             <div>
-                              <span className="ml-1">{ratting}</span>
+                              <span className="ml-1 nameS">{ratting}</span>
                             </div>
                           ) : (
                             ""
@@ -85,12 +89,18 @@ export const Products = ({
                       </div>
                     </span>
 
-                    <div className="mt-2">
+                    <div
+                      className="mt-2 terjual nameS"
+                      style={{ fontWeight: 500 }}
+                    >
                       {qty > 0 ? `Terjual : ` + qty : ""}{" "}
                     </div>
                   </div>
                   <div className="text-left mt-1">
-                    <span className=""> {location} </span>
+                    <span className="nameS" style={{ fontWeight: 500 }}>
+                      {" "}
+                      {location}{" "}
+                    </span>
                   </div>
                 </div>
               </div>

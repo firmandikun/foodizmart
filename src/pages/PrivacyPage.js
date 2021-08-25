@@ -1,5 +1,4 @@
 import React from "react";
-import { Privacy } from "../atom/privacy";
 import { Link, useHistory } from "react-router-dom";
 import { HeaderPage } from "../components/headerPage";
 import { Conditions } from "../atom/condition";

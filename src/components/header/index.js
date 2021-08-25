@@ -26,13 +26,7 @@ const useStyles = makeStyles({
 
 let district = ["jakarta selatan", "Yogyakarta", "bekasi", "kebumen"];
 
-export const Header = ({
-  onChange,
-  onPress,
-  handleSubmit,
-  search,
-  location,
-}) => {
+export const Header = ({ onChange, onPress, handleSubmit, search }) => {
   const [drawel, setDrawel] = React.useState(false);
   const classes = useStyles();
   const toggleDrawer = (open) => (event) => {
@@ -91,8 +85,8 @@ export const Header = ({
                 className="shadow-none border-0 form-control pl-0"
                 placeholder={search || "Cari Produk Pilihanmu..."}
                 aria-describedby="basic-addon1"
-                placeholder={search}
                 onChange={onChange}
+                style={{ width: 162 }}
               />
             </form>
           </div>
@@ -105,7 +99,6 @@ export const Header = ({
           navbar navbar-expand-lg navbar-light
           bg-white
           osahan-header
-          p-0
           container
         "
         >
@@ -153,10 +146,15 @@ export const Header = ({
                   </i>
                 </div>
                 <div>
-                  <p className="text-elipps text-muted mb-0 small">
+                  <p
+                    className="text-elipps text-muted mb-0 small"
+                    style={{ fontWeight: 400 }}
+                  >
                     lokasi saat ini
                   </p>
-                  <div className="address">{alamat || address}</div>
+                  <div className="address" style={{ fontWeight: 400 }}>
+                    {alamat || address}
+                  </div>
                 </div>
               </a>
               <div
@@ -293,16 +291,24 @@ export const Header = ({
         className="bg-color-head headerNav"
         // style={{ position: "fixed", top: 0 }}
       >
-        <div className="container pl-1 ">
+        <div className="container pl-3">
           <Collapse navbar>
-            <Nav className="mr-auto" navbar>
+            <Nav className="mr-auto pl-1 " navbar>
               <NavItem>
-                <NavLink href="/" className=" text-white pl-0">
+                <NavLink
+                  href="/"
+                  className="headerN text-white pl-0 "
+                  style={{ fontWeight: 500 }}
+                >
                   Home
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/products" className="text-white">
+                <NavLink
+                  href="/products"
+                  className="text-white"
+                  style={{ fontWeight: 500 }}
+                >
                   Produk
                 </NavLink>
               </NavItem>
@@ -310,12 +316,20 @@ export const Header = ({
                 Produk
               </Link> */}
               <NavItem>
-                <NavLink className="text-white" href="/faq">
+                <NavLink
+                  className="text-white"
+                  href="/faq"
+                  style={{ fontWeight: 500 }}
+                >
                   F.A.Q.
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className="text-white" href="/about">
+                <NavLink
+                  className="text-white"
+                  href="/about"
+                  style={{ fontWeight: 500 }}
+                >
                   Tentang Kami
                 </NavLink>
               </NavItem>

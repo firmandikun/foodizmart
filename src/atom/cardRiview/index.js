@@ -1,8 +1,6 @@
 import React from "react";
-import photo from "../../assets/photo.png";
 import ratting from "../../assets/rating.png";
 export const CardRiview = ({ riview, linkImage, name, time, comment }) => {
-  console.log("list riview : ", riview);
   var photos = null;
   if (riview.information !== null) {
     photos = JSON.parse(riview.information).products[0].photo;
@@ -14,13 +12,13 @@ export const CardRiview = ({ riview, linkImage, name, time, comment }) => {
         <div class="card w-100 border-0 mb-3 ">
           <div class="card-body row ">
             <div className=" d-flex align-items-center justify-content-start ">
-              <div className="col-2" > 
-               <img
-                src={`${linkImage}${photos}`}
-                alt=""
-                style={{ width: 60, height: 60 }}
-                className="rounded-circle"
-              />
+              <div className="col-2">
+                <img
+                  src={`${linkImage}${photos}`}
+                  alt=""
+                  style={{ width: 60, height: 60 }}
+                  className="rounded-circle"
+                />
               </div>
               <div className="conten ml-2" style={{ width: 150 }}>
                 <h5
@@ -37,7 +35,7 @@ export const CardRiview = ({ riview, linkImage, name, time, comment }) => {
                 </h5>
               </div>
             </div>
-            <div className=" col-lg-8 col-sm-12 ratting mt-2" >
+            <div className=" col-lg-8 col-sm-12 ratting mt-2">
               <div className="d-flex  ">
                 <img
                   src={ratting}

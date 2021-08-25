@@ -1,0 +1,48 @@
+@media only screen and (max-width: 450px) {
+  .terjual {
+    font-size: 13px !important;
+  }
+  .nameP {
+    font-size: 13px !important;
+  }
+
+  .nameS {
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .icone_ratting {
+    margin-top: 3px;
+  }
+  h6.price {
+    margin-top: -8px !important;
+    font-size: 13px !important;
+  }
+}
+
+.nameS {
+  font-weight: 500;
+}
+@media only screen and (max-width: 390px) {
+  .terjual {
+    font-size: 11px !important;
+  }
+  .nameP {
+    font-size: 11px !important;
+  }
+
+  .nameS {
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .icone_ratting {
+    margin-top: 3px;
+  }
+  h6.nameS {
+    margin-top: -5px !important;
+    font-size: 11px;
+  }
+}
+
+.nameS {
+  font-weight: 500;
+}

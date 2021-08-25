@@ -46,9 +46,11 @@ const Home = () => {
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
   const history = useHistory();
 
+  // handle scroll
   const executeScroll = () => {
     return "";
   };
+  //  handle api slider
   const getSlider = async () => {
     setLoading(true);
     try {
@@ -68,6 +70,7 @@ const Home = () => {
     }
   };
 
+  //
   const currentLocations = async (state) => {
     var bodyFormdata = new FormData();
     if (state === null) {
@@ -291,7 +294,12 @@ const Home = () => {
       />
       <div className="container ">
         <div className="text-left  py-3">
-          <h5 className="m-0">Kategori</h5>
+          <h5
+            className="m-0 titleHome"
+            style={{ color: "#333333", fontWeight: 500 }}
+          >
+            Kategori
+          </h5>
         </div>
       </div>
       <div className="container">
@@ -326,7 +334,12 @@ const Home = () => {
         <div className="container">
           <div className="col-12 px-0">
             <div className="py-3 osahan-promos">
-              <h5 className="text-left m-0">Informasi</h5>
+              <h5
+                className="text-left m-0 titleHome"
+                style={{ fontWeight: 500 }}
+              >
+                Informasi
+              </h5>
             </div>
           </div>
         </div>
@@ -336,7 +349,9 @@ const Home = () => {
       </div>
       <div className="container list-product" style={{ overflow: "hidden" }}>
         <div className="title d-flex align-items-center py-3">
-          <h5 className="m-0">Produk</h5>
+          <h5 className="m-0 titleHome" style={{ fontWeight: 500 }}>
+            Produk Disekitarmu
+          </h5>
         </div>
         <div className="row row_products">
           {isLoading &&
@@ -352,7 +367,7 @@ const Home = () => {
               <Products
                 image={`${imageProducts}${product.photo}`}
                 nameProduct={product.name}
-                location={product.shop_address}
+                location={`${product.shop_regional_kelurahan_name}, ${product.shop_regional_kabupaten_name}`}
                 nameStore={product.shop_name}
                 status={
                   product.product_type === "readystock"
@@ -379,7 +394,9 @@ const Home = () => {
                 : setSeeAllProducts(product.length)
             }
           >
-            {seeAllProduct === product.length ? "less more" : "see more"}
+            {seeAllProduct === product.length
+              ? "Lebih Sedikit"
+              : "Selengkapnya"}
           </button>
         </div>
       </div>
@@ -387,7 +404,9 @@ const Home = () => {
         <div className="row">
           <div className="col-12">
             <div className="title d-flex align-items-center py-3">
-              <h5 className="m-0">Toko</h5>
+              <h5 className="m-0 titleHome" style={{ fontWeight: 500 }}>
+                Toko Disekitarmu
+              </h5>
             </div>
           </div>
         </div>
@@ -418,7 +437,7 @@ const Home = () => {
                 : setSeeAllStore(store.length)
             }
           >
-            {seeAllStore === store.length ? "less more" : "see more"}
+            {seeAllStore === store.length ? "Lebih Sedikit" : "Selengkapnya"}
           </button>
         </div>
       </div>

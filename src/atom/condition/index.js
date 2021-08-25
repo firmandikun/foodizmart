@@ -1,9 +1,9 @@
 import React from "react";
-
+import "./privacy.css"
 export const Conditions = () => {
   return (
     <div>
-      <h3 className="text-left " style={{ marginLeft: 32 }}>
+      <h3 className="text-center " style={{ marginLeft: 32 }}>
         Kebijakan Privasi
       </h3>
       <p className="text-justify " style={{ marginLeft: 32 }}>
@@ -309,7 +309,7 @@ export const Conditions = () => {
                 </li>
               </ul>
             </p>
-            <p>
+            <p  >
               b. Jika anda adalah penyedia layanan, kami dapat menggunakan
               Informasi Pribadi anda:
               <ul>
@@ -702,7 +702,7 @@ export const Conditions = () => {
           akan dianggap sebagai persetujuan anda terhadap Kebijakan Privasi ini
           dan segala perubahannya.
         </div>
-        <h5 className="text-left">Pengakuan dan persetujuan</h5>
+        <h5 className="text-left"> 9. Pengakuan dan persetujuan</h5>
         <div className="d-flex text-justify" style={{ marginLeft: 32 }}>
           <ul className="text-left">
             <ol>

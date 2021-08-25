@@ -39,7 +39,7 @@ export const Footer = () => {
               <a className="nav-link " href="/trems">
                 Syarat dan Ketentuan
               </a>
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/privacy">
                 Kebijakan Privasi
               </a>
               <a className="nav-link" href="/contact">

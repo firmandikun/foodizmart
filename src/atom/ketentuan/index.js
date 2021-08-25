@@ -1,4 +1,5 @@
 import React from "react";
+import "./ketentuan.css"
 
 export const Ketentuan = () => {
   return (
@@ -6,7 +7,7 @@ export const Ketentuan = () => {
       <h3 className="text-center">
         SYARAT DAN KETENTUAN PENGGUNAAN APLIKASI FOODIZMART
       </h3>
-      <p className="text-center font-weight-bold">
+      <p className="text-center"  >
         Berlaku mulai 1 Agustus 2021
       </p>
       <h5 className="text-left  "> 1. Syarat dan Ketentuan</h5>

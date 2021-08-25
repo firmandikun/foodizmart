@@ -7,14 +7,13 @@ import icontFillter from "../../src/assets/fillter.png";
 import axios from "axios";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
-import { LoadingComponent } from "../atom/loading";
+import { LoadingComponent, LoadingComponentsm } from "../atom/loading";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
 import { useSelector } from "react-redux";
-import { useRef } from "react";
 
 const useStyles = makeStyles({
   list: {
-    width: 250,
+    width: 200,
   },
   fullList: {
     width: "auto",
@@ -29,6 +28,8 @@ export const ListProducts = (props) => {
     props.location.state !== undefined ? props.location.state.cari : ""
   );
   const [fillterProducts, setFillterProducts] = React.useState([]);
+  const [states, setState] = React.useState([]);
+
   const [categoryId] = React.useState(
     props.location.state !== undefined ? props.location.state.categoryId : ""
   );
@@ -44,14 +45,15 @@ export const ListProducts = (props) => {
   const [keywordSearch] = React.useState(
     props.location.state !== undefined
       ? props.location.state.cari
-      : "Cari Produk Pilihanmu"
+      : "Cari Produk Pilihanmu..."
   );
 
   const [hasMore, setHasMore] = React.useState(true);
 
-  const [isloading, setLoading] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
   const state = useSelector((state) => state.address);
-  const [page, setPage] = React.useState(8);
+  const [page, setPage] = React.useState(1);
+  const [showButton, setShowButton] = React.useState(true);
 
   const toggleDrawer = (open) => (event) => {
     setDrawel(open);
@@ -64,13 +66,17 @@ export const ListProducts = (props) => {
 
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
-  const fecthData = (params) => {
+  const fecthData = (params, loadmore = false) => {
     setLoading(true);
+    console.log("page : ", page);
     var bodyFormdata = new FormData();
     bodyFormdata.append("search_type", "product");
     bodyFormdata.append("search_key", params.cari);
     bodyFormdata.append("filter[product_categor_id]", params.categoryId);
-    // bodyFormdata.append("pagination", page);
+    if (loadmore) {
+      bodyFormdata.append("pagination", page + 1);
+      setPage(page + 1);
+    }
 
     axios
       .post(
@@ -84,66 +90,18 @@ export const ListProducts = (props) => {
       )
       .then((res) => {
         if (res.data.status === "success") {
-          let filterProduk = [...res.data.data.product_result];
-
-          let currentLocation = state.data.cordinate;
-
-          filterProduk.map((val) => {
-            var nearby_m = haversineDistance(currentLocation, {
-              latitude: val.shop_latitude,
-              longitude: val.shop_longitude,
-            });
-            var nearby_km = nearby_m / 1000;
-            val.distance = nearby_km.toFixed(1);
-            return val;
-          });
-          setFillterProducts(filterProduk);
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const fecthMoreData = (params) => {
-    var bodyFormdata = new FormData();
-    bodyFormdata.append("search_type", "product");
-    bodyFormdata.append("search_key", params.cari);
-    bodyFormdata.append("filter[product_categor_id]", params.categoryId);
-    // bodyFormdata.append("pagination", page + 1);
-
-    axios
-      .post(
-        "https://foodi.otiza.com/apiv1/product/search-product",
-        bodyFormdata,
-        {
-          headers: {
-            Authorization: authBasic,
-          },
-        }
-      )
-      .then((res) => {
-        if (res.data.status === "success") {
-          setHasMore(false);
-          if (res.data.data.product_result.length > 0) {
-            let filterProduk = [...res.data.data.product_result];
-
-            let currentLocation = state.data.cordinate;
-
-            filterProduk.map((val) => {
-              var nearby_m = haversineDistance(currentLocation, {
-                latitude: val.shop_latitude,
-                longitude: val.shop_longitude,
+          if (loadmore) {
+            if (res.data.data.product_result.length > 0) {
+              setFillterProducts((prevState) => {
+                return [...prevState, ...res.data.data.product_result];
               });
-              var nearby_km = nearby_m / 1000;
-              val.distance = nearby_km.toFixed(1);
-              return val;
-            });
-            setTimeout(() => {
-              setFillterProducts(fillterProducts.concat(filterProduk));
-            }, 1500);
+            } else {
+              setShowButton(false);
+            }
+          } else {
+            setFillterProducts(res.data.data.product_result);
           }
+          setLoading(false);
         }
       })
       .catch((err) => {
@@ -177,13 +135,15 @@ export const ListProducts = (props) => {
       />
       <Breadcrumb name="List Produk" />
       <div className="container  list-product">
-        <div className="title d-flex align-items-center py-3">
-          <h4 className="m-0">Pick's Today</h4>
-          <div className="m-0 text-center ml-auto">
+        <div className="title d-flex align-items-center justify-content-betwen py-3 ">
+          <h5 className="titleHome" style={{ fontWeight: 600 }}>
+            Produk
+          </h5>
+          <div className=" text-center ml-auto">
             <button
               href=""
               onClick={toggleDrawer(true)}
-              className="btn text-muted   bg-white mr-3"
+              className="btn text-muted   bg-white "
             >
               <img
                 src={icontFillter}
@@ -316,23 +276,26 @@ export const ListProducts = (props) => {
         </Drawer>
 
         <div className="row listProducts ">
-          {isloading && (
-            <div className="d-flex">
-              <LoadingComponent />
-              <LoadingComponent />
-              <LoadingComponent />
-              <LoadingComponent />
-            </div>
-          )}
-
-          {fillterProducts.slice(0, page).map((product, index) => {
-            return isloading === true ? (
+          {isLoading &&
+            [...Array(4)].map(() => {
+              return window.innerWidth < 500 ? (
+                <div className="d-flex ">
+                  <LoadingComponentsm />
+                </div>
+              ) : (
+                <div className="d-flex ">
+                  <LoadingComponent />
+                </div>
+              );
+            })}
+          {fillterProducts.map((product, index) => {
+            return isLoading === true ? (
               <LoadingComponent />
             ) : (
               <Products
                 image={`${imageProduct}${product.photo}`}
                 nameProduct={product.name}
-                location={product.shop_address}
+                location={`${product.shop_regional_kelurahan_name}, ${product.shop_regional_kabupaten_name}`}
                 nameStore={product.shop_name}
                 status={
                   product.product_type === "readystock"
@@ -349,20 +312,21 @@ export const ListProducts = (props) => {
             );
           })}
         </div>
-        <div className="row pr-4 mb-2">
-          {page === fillterProducts.length ? (
+        <div className="row pr-2 mb-2">
+          {showButton && (
             <a
-              className="btn btn-outline-danger disabled ml-auto"
-              onClick={() => setPage(page + 4)}
+              className="btn btn-outline-danger  ml-auto "
+              onClick={() => {
+                fecthData(
+                  {
+                    cari: seacrh,
+                    categoryId: categoryId,
+                  },
+                  true
+                );
+              }}
             >
-              {page === fillterProducts.length ? "semua produk" : "lainya"}
-            </a>
-          ) : (
-            <a
-              className="btn btn-outline-danger  ml-auto"
-              onClick={() => setPage(page + 4)}
-            >
-              {page === fillterProducts.length ? "semua produk" : "lainya"}
+              Lainya
             </a>
           )}
         </div>

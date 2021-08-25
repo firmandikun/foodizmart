@@ -10,9 +10,10 @@ import axios from "axios";
 import { withRouter } from "react-router";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { convertTimeAgo, convertToIdr } from "../assets/js/convert (1)";
+import { convertTimeAgo } from "../assets/js/convert (1)";
 import {
   LoadingComponent,
+  LoadingComponentsm,
   LoadingStore,
   LoadingStoreAlert,
 } from "../atom/loading";
@@ -33,7 +34,7 @@ const DetailStore = (props) => {
   const state = useSelector((state) => state.address);
   const [seacrh, setSeacrh] = React.useState();
   const [totalRiview, setDataRiview] = React.useState();
-  const [keywordSearch] = React.useState("search product...");
+  const [keywordSearch] = React.useState("Cari Produk Pilihanmu...");
   const authBasic =
     "Basic RjBPRCFaTTQxMlQ6MzQwMzQ3Nzc5NTU3Njg0MDE0MDcyMDUwOTQ5NTE4ODk3NzQ0NDYxMw==";
   const history = useHistory();
@@ -122,7 +123,6 @@ const DetailStore = (props) => {
         console.log(err);
       });
   };
-  // console.log("products :", detailStore);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -148,7 +148,7 @@ const DetailStore = (props) => {
         handleSubmit={handleSubmit}
       />
       <Breadcrumb name="Detail Toko" />
-      <div className="container mt-5 ">
+      <div className="container mt-3 ">
         <div className="row m-0 p-0">
           {isLoading ? (
             <LoadingStoreAlert />
@@ -195,7 +195,7 @@ const DetailStore = (props) => {
               >
                 {detailStore.name}
               </h3>
-              <div className="d-flex">
+              <div className="d-flex  ">
                 <img
                   src={maps}
                   alt=""
@@ -220,14 +220,14 @@ const DetailStore = (props) => {
                 {detailStore.description}
               </p>
             </div>
-            <div className="col-lg-4  px-3 col-md-12 col-sm-12 col4Store">
+            <div className="col-lg-4   col-md-12 col-sm-12 col4Store">
               <div className="">
                 <div className="pt-2">
                   <p className="font-weight-bold ml-1 text-left">
                     Kualitas Toko
                     <br />
                     <div
-                      className="d-flex align-items-center "
+                      className="d-flex align-items-center"
                       style={{
                         fontSize: 18,
                         fontWeight: "bold",
@@ -304,20 +304,20 @@ const DetailStore = (props) => {
           </div>
         </div>
         <div className="row" style={{ overflow: "hidden" }}>
-          {isLoading && (
-            <div className="d-flex">
-              <LoadingComponent />
-              <LoadingComponent />
-              <LoadingComponent />
-              <LoadingComponent />
-            </div>
-          )}
+          {isLoading &&
+            [...Array(8)].map(() => {
+              return window.innerWidth < 500 ? (
+                <LoadingComponentsm />
+              ) : (
+                <LoadingComponent />
+              );
+            })}
           {productStore.slice(0, page).map((product, index) => {
             return (
               <Products
                 image={`${imageProduct}${product.photo}`}
                 nameProduct={product.name}
-                location={product.shop_address}
+                location={`${product.shop_regional_kelurahan_name}, ${product.shop_regional_kabupaten_name}`}
                 nameStore={product.shop_name}
                 price={product.price}
                 key={index}
@@ -343,7 +343,7 @@ const DetailStore = (props) => {
                 : setPage(productStore.length)
             }
           >
-            {page === productStore.length ? "less more" : "see more"}
+            {page === productStore.length ? "Lebih Sedikit" : "Selengkapnya"}
           </button>
         </div>
       </div>
@@ -379,7 +379,7 @@ const DetailStore = (props) => {
                 : setLimitRiview(riview.length)
             }
           >
-            {limitRiview === riview.length ? "less more" : "see more"}
+            {limitRiview === riview.length ? "Lebih Sedikit" : "Selengkapnya"}
           </button>
         </div>
       </div>

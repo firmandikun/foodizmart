@@ -1,0 +1,10 @@
+@media only screen and (max-width: 480px) { 
+  img.card-promos {
+      height : 120px !important;
+  }
+}
+@media only screen and (max-width: 390px) { 
+  img.card-promos {
+      height : 100px !important;
+  }
+}
