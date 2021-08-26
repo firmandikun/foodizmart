@@ -1,8 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import "./promos.css"
-
-
+import "./promos.css";
 
 export const CardPromos = ({ image }) => {
   return (

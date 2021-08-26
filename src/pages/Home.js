@@ -14,14 +14,12 @@ import {
   LoadingCategorysm,
   LoadingComponent,
   LoadingComponentsm,
-  LoadingInformation,
 } from "../atom/loading";
 import { useHistory, withRouter } from "react-router";
 import { useSelector } from "react-redux";
 import { START_FETCHING_ADRESS } from "../features/locations/constants";
 import axios from "axios";
 import { haversineDistance } from "../atom/haversineDistance/haversineDistance";
-import { useRef } from "react";
 
 const Home = () => {
   const [product, setProduct] = React.useState([]);
@@ -63,14 +61,12 @@ const Home = () => {
         }
       );
       setSleder(response.data);
-
       setLoading(false);
     } catch (err) {
       console.log(err);
     }
   };
 
-  //
   const currentLocations = async (state) => {
     var bodyFormdata = new FormData();
     if (state === null) {
